@@ -1,21 +1,32 @@
 import numpy as np
 import os, math, sys
 import SimpleITK as sitk
+import cv2
+
+sys.path.insert(0,"/home/bingxing/scripts/Connectivity_matrix/xregist")
 import ndreg2D
-from scipy.misc import imsave
 
 def main():
-    template=sitk.ReadImage(sys.argv[1], sitk.sitkFloat32) # full resolution image to be deformed
+    template=cv2.imread(sys.argv[1]) # full resolution image to be deformed
     target=sitk.ReadImage(sys.argv[2]) # full resolution target image
     transformfile = open(sys.argv[3])
     # read the transformation matrix
     with transformfile as f:
         euler2d=f.read().splitlines()
-        euler2d=map(float,euler2d)
 
-    outImg = ndreg2D.imgApplyAffine2D(template,euler2d,size=target.GetSize())
-    outImgM=sitk.GetArrayFromImage(outImg)
-    imsave(sys.argv[3],outImgM)
+    euler2d=map(float,euler2d)
+
+# apply transformation on every channel
+    outImgM=[None]*3
+    for c in range(0,3):
+        template2D=template1[:,:,c]
+        template2D=sitk.GetImageFromArray(template2D,isVector=True)
+        outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
+        outImgM[c]=sitk.GetArrayFromImage(outImg)
+
+# merge the RGB channels
+    outImg=cv2.merge(outImgM[0],outImgM[1],outImgM[2])
+    cv2.imwrite(sys.argv[4],outImg)
     transformfile.close()
     return
 

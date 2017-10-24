@@ -38,17 +38,13 @@ if ~exist(transformtxt,'file')
         insert(P,int32(0),pydirectory);
     end
     nissldeformed=[nissljp2(1:end-4),'_64down_deformed.tif'];
-    % python rigidFluoroToNissl.py F50/F50down.tif F50/N50down.tif F50/N50deformed.tif F50/rigidtransform.txt
     py.rigidFluoroToNissl(nisslsmallgray,fluorosmallgray,nissldeformed,transformtxt)
+    % python rigidFluoroToNissl.py F50/F50down.tif F50/N50down.tif F50/N50deformed.tif F50/rigidtransform.txt
 end
 %% 3. Apply the transformation matrix to original Nissl image
-nisslfinaltif=[nissljp2(1:end-4),'_deformed.tif'];
+
+py.applyxregFluoroToNissl(nissljp2,fluorojp2,transformtxt,
 % python applyxregFluoroToNissl.py <template.jp2/.tif> <target.jp2/.tif> <transform.txt> <output.tif>
 % output image is saved in tif format
-py.applyxregFluoroToNissl(nissljp2,fluorojp2,transformtxt,nisslfinaltif)
 %% 4. Compress the image to JP2
-nisslfinaljp2=[nisslfinaltif(1:end-4),'.jp2'];
-status=system(['usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...
-    nisslfinaltif,' -o ',nisslfinaljp2,' -num_threads 8 -rate 1.0 Creversible=yes ',...
-    'Sprecision=16 Ssigned=no -full -precise Clevels=7 Clayers=8 Qstep=0.00001 Cblk=\{64,64\} ',...
-    'Corder=RPCL Cuse_sop=yes ORGgen_plt=yes ORGtparts=R -quiet']);
+% usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i N50deformed.tif -o N50deformed.jp2 -num_threads 8 -rate 1.0 Creversible=yes Sprecision=16 Ssigned=no -full -precise Clevels=7 Clayers=8 Qstep=0.00001 Cblk=\{64,64\} Corder=RPCL Cuse_sop=yes ORGgen_plt=yes ORGtparts=R -quiet
