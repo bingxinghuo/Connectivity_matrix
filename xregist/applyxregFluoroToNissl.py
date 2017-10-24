@@ -8,7 +8,8 @@ import ndreg2D
 
 def main():
     template=cv2.imread(sys.argv[1]) # full resolution image to be deformed
-    target=sitk.ReadImage(sys.argv[2]) # full resolution target image
+    target=cv2.imread(sys.argv[2]) # full resolution target image
+    target=sitk.GetImageFromArray(target,isVector=True)
     transformfile = open(sys.argv[3])
     # read the transformation matrix
     with transformfile as f:
