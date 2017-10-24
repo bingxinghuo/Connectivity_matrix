@@ -1,4 +1,8 @@
-%%
+%% xregFluoroToNissl.m
+% This function performs rigid transformation from Nissl to its neighboring fluorescent image
+% Inputs:
+%   - nissljp2: a string containing the jp2 file of the Nissl section
+%   - fluorojp2: a string containing the jp2 file of the Nissl section
 function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt)
 if ~exist(transformtxt,'file')
     %% 1. Read in images
@@ -39,7 +43,7 @@ if ~exist(transformtxt,'file')
     end
     nissldeformed=[nissljp2(1:end-4),'_64down_deformed.tif'];
     % python rigidFluoroToNissl.py F50/F50down.tif F50/N50down.tif F50/N50deformed.tif F50/rigidtransform.txt
-    py.rigidFluoroToNissl(nisslsmallgray,fluorosmallgray,nissldeformed,transformtxt)
+    py.rigidFluoroToNissl(nissltif,fluorotif,nissldeformed,transformtxt)
 end
 %% 3. Apply the transformation matrix to original Nissl image
 nisslfinaltif=[nissljp2(1:end-4),'_deformed.tif'];
