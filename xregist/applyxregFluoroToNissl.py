@@ -20,7 +20,7 @@ def main():
 # apply transformation on every channel
     outImgM=[None]*3
     for c in range(0,3):
-        template2D=template1[:,:,c]
+        template2D=template[:,:,c]
         template2D=sitk.GetImageFromArray(template2D,isVector=True)
         outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
         outImgM[c]=sitk.GetArrayFromImage(outImg)
