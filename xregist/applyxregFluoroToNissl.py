@@ -26,7 +26,7 @@ def main():
         outImgM[c]=sitk.GetArrayFromImage(outImg)
 
 # merge the RGB channels
-    outImg=cv2.merge(outImgM[0],outImgM[1],outImgM[2])
+    outImg=cv2.merge((outImgM[0],outImgM[1],outImgM[2]))
     cv2.imwrite(sys.argv[4],outImg)
     transformfile.close()
     return
