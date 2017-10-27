@@ -12,7 +12,7 @@ partid_all=[partid(:,1),cell(N1,2)];
 for i=1:N1 % separates according to brain parts at layer 1
     partid_all{i,2}=[];
     for j=1:L % go over each layer
-        partid_all{i,2}=[partid_all{i},partid{i,j}]; 
+        partid_all{i,2}=[partid_all{i,2},partid{i,j+1}]; 
     end
 end
 % 2. Column 3 contains the index of those brain parts in Fulllist
@@ -25,7 +25,7 @@ for i=1:N1
     partid_all{i,3}=partind;
 end
 %% Specify a subset of the top layers
-partialtop=[1,4,5,9];
+% partialtop=[1,4,5,9];
 % see what they are
 partid(partialtop,1)
 % Get all structures and substructures 
@@ -41,7 +41,7 @@ jsontree=struct(Fulllist_header{1},labellist(:,1),Fulllist_header{2},labellist(:
 savejson('Whole Brain',jsontree(2:end,:),'Filename','labelregion_v3.json');
 %% sanity check: which top layer do these labeled areas belong to
 Index_labeled=labelnum; % Column 1 saves the index of the labeled structures in full list
-Index_labeled(:,2)=Index(labelnum); % Column 2 saves the brain id of labeled parts
+Index_labeled(:,2)=cell2mat(Fulllist(labelnum,4)); % Column 2 saves the brain id of labeled parts
 for i=1:size(labelnum,1)
     for p=1:N1 % for each top tier structure
         n=find(ismember(partid_all{p,2},Index_labeled(i,2)));
@@ -60,7 +60,7 @@ end
 Index_labeled(:,5)=ismember(Index_labeled(:,3),partialtop); % check if it belongs to the desired top layers 
 % pull all info from the Fulllist
 part_label_ind=find(Index_labeled(:,1).*Index_labeled(:,5));
-part_label_list=Fulllist(labelnum(part_label_ind,2),:);
+part_label_list=Fulllist(labelnum(part_label_ind),:);
 % add higher layer regions in the tree
 part_label_list=[Fulllist(1,:);part_label_list]; % add whole brain
 %% Complete the hierarchy by adding missing links 
