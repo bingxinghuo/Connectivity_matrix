@@ -49,3 +49,5 @@ for g=1:3
         end
     end
 end
+%%
+save('structurevols','structure_volume')
