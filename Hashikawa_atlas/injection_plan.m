@@ -29,7 +29,7 @@ for g=1:3
             if l==L-1 % bottom branch
                 proceed=0;
             else
-                [~,regionpix]=regionread(marmo.atlas,regionid); % extract pixels
+                [~,regionpix]=regionread(marmo.atlas,regionid(r)); % extract pixels
                 regionvol=regionpix*mmperpix; % volume in mm3
                 regioninj=round(regionvol/(gridsize^3));  % calculate injection points
                 subregion=find(partid{greyind(g),l+2}(:,2)==r);
