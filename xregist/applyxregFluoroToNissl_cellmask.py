@@ -20,7 +20,7 @@ def main():
 # only 1 channel
     outImgM=[None]
     template2D=template
-    template2D=sitk.GetImageFromArray(template2D,isVector=True)
+   # template2D=sitk.GetImageFromArray(template2D,isVector=True)
     outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
 #    outImgM=sitk.GetArrayFromImage(outImg)
 
