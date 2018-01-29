@@ -27,7 +27,7 @@ if ~exist(transformtxt,'file')
         fluoroimg=imread(fluorojp2,'jp2');
         % downsample
         for i=1:3
-            fluorosmall(:,:,i)=jp22tif_downsample(fluoroimg(:,:,i),64);
+            fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),64);
         end
         % combine to grayscale
         fluorosmallgray=uint8(mean(fluorosmall,3));
