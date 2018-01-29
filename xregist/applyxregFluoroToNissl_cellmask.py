@@ -22,7 +22,7 @@ def main():
     template2D=template
     template2D=sitk.GetImageFromArray(template2D,isVector=True)
     outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
-    outImgM=sitk.GetArrayFromImage(outImg)
+#    outImgM=sitk.GetArrayFromImage(outImg)
 
 # merge the RGB channels
     #outImg=cv2.merge((outImgM[0],outImgM[1],outImgM[2]))
