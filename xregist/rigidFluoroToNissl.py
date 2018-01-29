@@ -17,7 +17,7 @@ def main():
     translation = registrationTranslation(target, template, translation, 0.35, 0.005, 0.0001)
     euler2d = registrationEuler2D(target, template, translation, 0.2, 0.02, 0.00005)
     euler2d = registrationEuler2D(target, template, euler2d, 0.06, 0.005, 0.000025)
-    euler2d = registrationEuler2D(target, template, translation, 0.04, 0.002, 0.000025)
+    euler2d = registrationEuler2D(target, template, euler2d, 0.04, 0.002, 0.000025)
     outImg = ndreg2D.imgApplyAffine2D(template, euler2d, size=target.GetSize())
     sitk.WriteImage(outImg, sys.argv[3])
     mytransformfile = open(sys.argv[4], "w")
