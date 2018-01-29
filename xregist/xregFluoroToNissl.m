@@ -13,7 +13,7 @@ if ~exist(transformtxt,'file')
         nisslimg=imread(nissljp2,'jp2');
         % downsample
         for i=1:3
-            nisslsmall(:,:,i)=jp22tif_downsample(nisslimg(:,:,i),64);
+            nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),64);
         end
         % combine to grayscale
         nisslsmallgray=uint8(mean(nisslsmall,3));
