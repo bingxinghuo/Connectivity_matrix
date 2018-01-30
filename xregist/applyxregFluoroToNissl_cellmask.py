@@ -18,9 +18,9 @@ def main():
     euler2d=map(float,euler2d)
 
 # apply transformation
-        template2D=sitk.GetImageFromArray(template,isVector=True)
-        outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
-        outImg=sitk.GetArrayFromImage(outImg)
+    template2D=sitk.GetImageFromArray(template,isVector=True)
+    outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
+    outImg=sitk.GetArrayFromImage(outImg)
 
     cv2.imwrite(sys.argv[4],outImg)
     transformfile.close()
