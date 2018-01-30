@@ -7,7 +7,7 @@ sys.path.insert(0,"/home/bingxing/scripts/Connectivity_matrix/xregist")
 import ndreg2D
 
 def main():
-    template=cv2.imread(sys.argv[1]) # full resolution image to be deformed
+    template=cv2.imread(sys.argv[1],0) # full resolution grayscale image to be deformed
     target=cv2.imread(sys.argv[2]) # full resolution target image
     target=sitk.GetImageFromArray(target,isVector=True)
     transformfile = open(sys.argv[3])
@@ -17,15 +17,11 @@ def main():
 
     euler2d=map(float,euler2d)
 
-# only 1 channel
-    outImgM=[None]
-    template2D=template
-   # template2D=sitk.GetImageFromArray(template2D,isVector=True)
-    outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
-#    outImgM=sitk.GetArrayFromImage(outImg)
+# apply transformation
+        template2D=sitk.GetImageFromArray(template,isVector=True)
+        outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
+        outImg=sitk.GetArrayFromImage(outImg)
 
-# merge the RGB channels
-    #outImg=cv2.merge((outImgM[0],outImgM[1],outImgM[2]))
     cv2.imwrite(sys.argv[4],outImg)
     transformfile.close()
     return
