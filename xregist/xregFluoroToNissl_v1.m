@@ -3,7 +3,7 @@
 % Inputs:
 %   - nissljp2: a string containing the jp2 file of the Nissl section
 %   - fluorojp2: a string containing the jp2 file of the Nissl section
-function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2)
+function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt)
 if ~exist(transformtxt,'file')
     %% 1. Read in images
     % 1.1 Nissl
@@ -35,17 +35,24 @@ if ~exist(transformtxt,'file')
         imwrite(fluorosmallgray,fluorotif,'tif','compression','lzw')
     end
     %% 2. Python code to generate the transformation matrix
-    status=system(['python ~/scripts/Connectivity_matrix/xregist/rigidFluoroToNissl.py ',...
-        nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',transformtxt]);
-    
+    % add python search directory, if necessary
+    pydirectory='/home/bingxing/scripts/Connectivity_matrix/xregist/';
+    P = py.sys.path;
+    if count(P,pydirectory) == 0
+        insert(P,int32(0),pydirectory);
+    end
+    nissldeformed=[nissljp2(1:end-4),'_64down_deformed.tif'];
+    % python rigidFluoroToNissl.py F50/F50down.tif F50/N50down.tif F50/N50deformed.tif F50/rigidtransform.txt
+    py.rigidFluoroToNissl(nissltif,fluorotif,nissldeformed,transformtxt)
 end
-%% 3. Apply the transformation matrix to fluorescent cell image
-celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
-status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
-    celljp2,' ',nissljp2,' ',transformtxt,' ',celljp2_deformed]);
-% %% 4. Compress the image to JP2
-% nisslfinaljp2=[cellfinaltif(1:end-4),'.jp2'];
-% status=system(['/usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...
-%     cellfinaltif,' -o ',nisslfinaljp2,' -num_threads 8 -rate 1.0 Creversible=yes ',...
-%     'Sprecision=16 Ssigned=no -full -precise Clevels=7 Clayers=8 Qstep=0.00001 Cblk=\{64,64\} ',...
-%     'Corder=RPCL Cuse_sop=yes ORGgen_plt=yes ORGtparts=R -quiet']);
+%% 3. Apply the transformation matrix to original Nissl image
+nisslfinaltif=[nissljp2(1:end-4),'_deformed.tif'];
+% python applyxregFluoroToNissl.py <template.jp2/.tif> <target.jp2/.tif> <transform.txt> <output.tif>
+% output image is saved in tif format
+py.applyxregFluoroToNissl(nissljp2,fluorojp2,transformtxt,nisslfinaltif)
+%% 4. Compress the image to JP2
+nisslfinaljp2=[nisslfinaltif(1:end-4),'.jp2'];
+status=system(['/usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...
+    nisslfinaltif,' -o ',nisslfinaljp2,' -num_threads 8 -rate 1.0 Creversible=yes ',...
+    'Sprecision=16 Ssigned=no -full -precise Clevels=7 Clayers=8 Qstep=0.00001 Cblk=\{64,64\} ',...
+    'Corder=RPCL Cuse_sop=yes ORGgen_plt=yes ORGtparts=R -quiet']);
