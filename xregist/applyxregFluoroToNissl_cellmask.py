@@ -12,7 +12,7 @@ def main():
 #    target=sitk.GetImageFromArray(target,isVector=True)
 #    target.SetSpacing([1.0,1.0])
 #    target.SetSpacing([0.00046,0.00046]*64)
-    template=cv2.imread(sys.argv[1]) # full resolution image to be deformed
+    template=cv2.imread(sys.argv[1],0) # full resolution image to be deformed
     template2D=sitk.GetImageFromArray(template,isVector=True)
     template2D.SetSpacing([1.0,1.0])
     transformfile = open(sys.argv[2])
@@ -21,6 +21,7 @@ def main():
         euler2d=f.read().splitlines()
 
     euler2d=map(float,euler2d)
+    
     dsrate=int(sys.argv[3])
     euler2d[4:6]=[x*dsrate for x in euler2d[4:6]]
 

@@ -11,6 +11,7 @@ if ~exist(transformtxt,'file')
     if ~exist(nissltif,'file')
         % load
         nisslimg=imread(nissljp2,'jp2');
+        [nisslheight,nisslwidth,~]=size(nisslimg);
         % downsample
         for i=1:3
             nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),M);
@@ -19,6 +20,10 @@ if ~exist(transformtxt,'file')
         nisslsmallgray=uint8(mean(nisslsmall,3));
         % save
         imwrite(nisslsmallgray,nissltif,'tif','compression','lzw')
+    else
+        imgsize=imfinfo(nissljp2);
+        imgwidth=imgsize.Width;
+        imgheight=imgsize.Height;
     end
     % 1.2 Fluorescent image
     fluorotif=[fluorojp2(1:end-4),'_down.tif'];
@@ -41,11 +46,8 @@ if ~exist(transformtxt,'file')
 end
 %% 3. Apply the transformation matrix to fluorescent cell image
 celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
-imgsize=imfinfo(nissljp2);
-imgwidth=imgsize.Width;
-imgheight=imgsize.Height;
 status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
-    nissljp2,' ',celljp2,' ',transformtxt,' ',celljp2_deformed]);
+    celljp2,' ',transformtxt,' ',num2str(nisslwidth),' ',num2str(nisslheight),' ',celljp2_deformed]);
 % %% 4. Compress the image to JP2
 % nisslfinaljp2=[cellfinaltif(1:end-4),'.jp2'];
 % status=system(['/usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...
