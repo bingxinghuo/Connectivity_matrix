@@ -1,14 +1,16 @@
+function xreg_LGN(workdir,fludir,nissldir,secrange)
+cd(workdir)
 %% 1. downsample
 % identify flurescent sections
 cd(fludir)
 filelist=jp2lsread;
-[fileind_1,~]=jp2ind(filelist,flurange(1));
-[fileind_N,~]=jp2ind(filelist,flurange(2));
+[fileind_1,~]=jp2ind(filelist,num2str(secrange(1)));
+[fileind_N,~]=jp2ind(filelist,num2str(secrange(2)));
 fileinds_flu=fileind_1:fileind_N; % file indices of all the involved fluorescent sections
 fileids_flu=filelist(fileind_1:fileind_N); % file names of all the involved fluorescent sections
 N_flu_files=length(fileids_flu); % number of fluorescent sections
-fluorojp2=cell(N_flu_files,1); 
-maskmat=cell(N_flu_files,1); 
+fluorojp2=cell(N_flu_files,1);
+maskmat=cell(N_flu_files,1);
 for f=1:N_flu_files
     fluorojp2{f}=[pwd,'/',fileids_flu{f}]; % generate individual file path for fluorescent sections
     maskmat{f}=[pwd,'/imgmasks/imgmaskdata_',num2str(fileinds_flu(f))]; % identify corresponding mask
@@ -16,9 +18,8 @@ end
 % identify adjacent Nissl sections
 cd(nissldir)
 filelist=jp2lsread;
-[fileind_1,~]=jp2ind(filelist,nisslrange(1));
-[fileind_N,~]=jp2ind(filelist,nisslrange(2));
-fileinds_nissl=fileind_1:fileind_N; % file indices of all the involved Nissl sections
+[fileind_1,~]=jp2ind(filelist,num2str(secrange(1)));
+[fileind_N,~]=jp2ind(filelist,num2str(secrange(2)));
 fileids_nissl=filelist(fileind_1:fileind_N); % file names of all the involved Nissl sections
 N_nissl_files=length(fileids_nissl); % number of Nissl sections
 % sanity check
@@ -45,6 +46,7 @@ for f=1:N_flu_files
     imwrite(cellmask,[workdir,fluorojp2{f}(1:end-4),'_cells.jp2'])
     transformtxt=[workdir,fluorojp2{f}(1:end-4),'_trans.txt'];
     celljp2=[workdir,fluorojp2{f}(1:end-4),'_cells_deformed.jp2'];
-%% 3. register fluorescent to Nissl  
-cd(workdir)
-xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2);
+    %% 3. register fluorescent to Nissl
+    cd(workdir)
+    xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2);
+end
