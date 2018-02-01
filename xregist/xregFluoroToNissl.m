@@ -42,7 +42,7 @@ end
 %% 3. Apply the transformation matrix to fluorescent cell image
 celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
 status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
-    celljp2,' ',nissljp2,' ',transformtxt,' ',celljp2_deformed]);
+    nissljp2,' ',celljp2,' ',transformtxt,' ',celljp2_deformed]);
 % %% 4. Compress the image to JP2
 % nisslfinaljp2=[cellfinaltif(1:end-4),'.jp2'];
 % status=system(['/usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...

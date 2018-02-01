@@ -43,8 +43,6 @@ for f=1:N_flu_files
         cellmask(fbcellind(i,2),fbcellind(i,1))=10;
     end
     imwrite(cellmask,[workdir,fluorojp2{f}(1:end-4),'_cells.jp2'])
-    transformtxt=[workdir,fluorojp2{f}(1:end-4),'_trans.txt'];
-    celljp2=[workdir,fluorojp2{f}(1:end-4),'_cells_deformed.jp2'];
+    transformtxt=[workdir,fluorojp2{f}(1:end-5
 %% 3. register fluorescent to Nissl  
-cd(workdir)
-xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2);
+xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2)

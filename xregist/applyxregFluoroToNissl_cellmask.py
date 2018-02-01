@@ -21,7 +21,7 @@ def main():
     euler2d=map(float,euler2d)
 
 # apply transformation
-    outImg = ndreg2D.imgApplyAffine2D(template,euler2d,size=target.GetSize())
+    outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
 
     sitk.WriteImage(outImg,sys.argv[4])
     transformfile.close()
