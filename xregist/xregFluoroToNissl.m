@@ -3,17 +3,17 @@
 % Inputs:
 %   - nissljp2: a string containing the jp2 file of the Nissl section
 %   - fluorojp2: a string containing the jp2 file of the Nissl section
-function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2)
+function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2,M)
 if ~exist(transformtxt,'file')
     %% 1. Read in images
     % 1.1 Nissl
-    nissltif=[nissljp2(1:end-4),'_64down.tif'];
+    nissltif=[nissljp2(1:end-4),'_down.tif'];
     if ~exist(nissltif,'file')
         % load
         nisslimg=imread(nissljp2,'jp2');
         % downsample
         for i=1:3
-            nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),64);
+            nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),M);
         end
         % combine to grayscale
         nisslsmallgray=uint8(mean(nisslsmall,3));
@@ -21,13 +21,13 @@ if ~exist(transformtxt,'file')
         imwrite(nisslsmallgray,nissltif,'tif','compression','lzw')
     end
     % 1.2 Fluorescent image
-    fluorotif=[fluorojp2(1:end-4),'_64down.tif'];
+    fluorotif=[fluorojp2(1:end-4),'_down.tif'];
     if ~exist(fluorotif,'file')
         % load
         fluoroimg=imread(fluorojp2,'jp2');
         % downsample
         for i=1:3
-            fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),64);
+            fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),M);
         end
         % combine to grayscale
         fluorosmallgray=uint8(mean(fluorosmall,3));
@@ -35,8 +35,8 @@ if ~exist(transformtxt,'file')
         imwrite(fluorosmallgray,fluorotif,'tif','compression','lzw')
     end
     %% 2. Python code to generate the transformation matrix
-    status=system(['python ~/scripts/Connectivity_matrix/xregist/rigidFluoroToNissl.py ',...
-        nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',transformtxt]);
+    status=system(['python ~/scripts/Connectivity_matrix/xregist/rigidFluoroToNissl_cellmask.py ',...
+        nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',num2str(M),' ',transformtxt]);
     
 end
 %% 3. Apply the transformation matrix to fluorescent cell image

@@ -21,12 +21,13 @@ def main():
         euler2d=f.read().splitlines()
 
     euler2d=map(float,euler2d)
-    euler2d[4:6]=[x*64 for x in euler2d[4:6]]
+    dsrate=int(sys.argv[4])
+    euler2d[4:6]=[x*dsrate for x in euler2d[4:6]]
 
 # apply transformation
     outImg = ndreg2D.imgApplyAffine2D(template2D,euler2d,size=target.GetSize())
     outImg=sitk.GetArrayFromImage(outImg)
-    cv2.imwrite(sys.argv[4],outImg)
+    cv2.imwrite(sys.argv[5],outImg)
 #    sitk.WriteImage(outImg,sys.argv[4])
     transformfile.close()
     return

@@ -48,5 +48,5 @@ for f=1:N_flu_files
     celljp2=[workdir,fluorojp2{f}(1:end-4),'_cells_deformed.jp2'];
     %% 3. register fluorescent to Nissl
     cd(workdir)
-    xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2);
+    xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2,64);
 end
