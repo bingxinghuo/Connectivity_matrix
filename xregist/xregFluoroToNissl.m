@@ -41,6 +41,9 @@ if ~exist(transformtxt,'file')
 end
 %% 3. Apply the transformation matrix to fluorescent cell image
 celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
+imgsize=imfinfo(nissljp2);
+imgwidth=imgsize.Width;
+imgheight=imgsize.Height;
 status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
     nissljp2,' ',celljp2,' ',transformtxt,' ',celljp2_deformed]);
 % %% 4. Compress the image to JP2
