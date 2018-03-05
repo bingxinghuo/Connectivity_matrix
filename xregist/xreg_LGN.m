@@ -59,6 +59,7 @@ for f=1:N_flu_files
     transformtxt=[workdir,fileids_flu{f}(1:end-4),'_trans.txt'];
     xregFluoroToNissl_cell(nissljp2{f},fluorojp2{f},animalid,transformtxt);
     %% 4. transform cell coordinates
+    M=64;
     tf=dlmread(transformtxt);
     rotmat=[tf(1),tf(3);tf(2),tf(4)];
     transmat=tf(5:6)*M;
