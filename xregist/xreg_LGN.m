@@ -1,11 +1,17 @@
-function xreg_LGN(workdir,fludir,nissldir,secrange)
-cd(workdir)
-%% 1. downsample
+function xreg_LGN(animalid,animaldir,secrangef,secrangen)
+fludir=[animaldir,'/',animalid,'F/JP2/'];
+nissldir=[animaldir,'/',animalid,'N/JP2/'];
+workdir=[animaldir,'/',animalid,'F/cellxreg/'];
+if ~exist(workdir,'dir')
+    mkdir(workdir)
+end
+% cd(workdir)
+%% 1. Get file names
 % identify flurescent sections
 cd(fludir)
 filelist=jp2lsread;
-[fileind_1,~]=jp2ind(filelist,num2str(secrange(1)));
-[fileind_N,~]=jp2ind(filelist,num2str(secrange(2)));
+[fileind_1,~]=jp2ind(filelist,num2str(secrangef(1)));
+[fileind_N,~]=jp2ind(filelist,num2str(secrangef(2)));
 fileinds_flu=fileind_1:fileind_N; % file indices of all the involved fluorescent sections
 fileids_flu=filelist(fileind_1:fileind_N); % file names of all the involved fluorescent sections
 N_flu_files=length(fileids_flu); % number of fluorescent sections
@@ -18,8 +24,8 @@ end
 % identify adjacent Nissl sections
 cd(nissldir)
 filelist=jp2lsread;
-[fileind_1,~]=jp2ind(filelist,num2str(secrange(1)));
-[fileind_N,~]=jp2ind(filelist,num2str(secrange(2)));
+[fileind_1,~]=jp2ind(filelist,num2str(secrangen(1)));
+[fileind_N,~]=jp2ind(filelist,num2str(secrangen(2)));
 fileids_nissl=filelist(fileind_1:fileind_N); % file names of all the involved Nissl sections
 N_nissl_files=length(fileids_nissl); % number of Nissl sections
 % sanity check
@@ -35,18 +41,20 @@ end
 cd(fludir)
 load('FBdetectdata.mat', 'FBclear')
 for f=1:N_flu_files
+    % get the image mask
     imgmask=load(maskmat{f});
     maskvar=fieldnames(imgmask);
     imgmask=getfield(imgmask,maskvar{1});
     fbcellind=[round(FBclear{fileinds_flu(f)}.x),round(FBclear{fileinds_flu(f)}.y)];
     cellmask=uint8(imgmask);
+    % set index to 10 for cell centroids
     for i=1:size(fbcellind,1)
         cellmask(fbcellind(i,2),fbcellind(i,1))=10;
     end
-    imwrite(cellmask,[workdir,fluorojp2{f}(1:end-4),'_cells.jp2'])
-    transformtxt=[workdir,fluorojp2{f}(1:end-4),'_trans.txt'];
-    celljp2=[workdir,fluorojp2{f}(1:end-4),'_cells_deformed.jp2'];
+    celljp2=[workdir,fileids_flu{f}(1:end-4),'_cells.jp2'];
+    imwrite(cellmask,celljp2)
     %% 3. register fluorescent to Nissl
     cd(workdir)
-    xregFluoroToNissl(nissljp2,fluorojp2,transformtxt,celljp2,64);
+    transformtxt=[workdir,fileids_flu{f}(1:end-4),'_trans.txt'];
+    xregFluoroToNissl(nissljp2{f},fluorojp2{f},animalid,transformtxt,celljp2,64);
 end

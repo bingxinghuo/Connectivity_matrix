@@ -14,7 +14,7 @@ def main():
 #    rate=int(sys.argv[5]) # downsample rate
     target = sitk.ReadImage(sys.argv[1], sitk.sitkFloat32)
 #    target.SetSpacing([0.46,0.46]*64)
-    target.SetSpacing([1.0,1.0])
+    target.SetSpacing([1.0,1.0]) # force spacing to 1.0
     template = sitk.ReadImage(sys.argv[2], sitk.sitkFloat32)
     template.SetSpacing(target.GetSpacing())
     translation = registrationTranslation(target, template, identityAffine, 0.4, 0.02, 0.0005)

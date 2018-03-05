@@ -51,16 +51,10 @@ if ~exist(transformtxt,'file')
             %         imwrite(fluorosmallgray,fluorotif,'tif','compression','lzw')
             %     end
         end
-        xregFdir=['../xregF/'];
-        if ~exist(xregFdir,'dir')
-            mkdir(xregFdir)
-        end
-        fluorotif_deformed=[xregFdir,fluorojp2(updirind(end)+1:end-4),'.tif'];
+        fluorotif_deformed=[pwd,'/xregF/',fluorojp2(1:end-4),'
     end
     %% 2. Python code to generate the transformation matrix
-%     status=system(['python ~/scripts/Connectivity_matrix/xregist/rigidFluoroToNissl_cellmask.py ',...
-%         nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',num2str(M),' ',transformtxt]);
-status=system(['python /Users/bingxinghuo/Documents/GITHUB/Connectivity_matrix/xregist/rigidFluoroToNissl_cellmask.py ',...
+    status=system(['python ~/scripts/Connectivity_matrix/xregist/rigidFluoroToNissl_cellmask.py ',...
         nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',num2str(M),' ',transformtxt]);
     
 end
