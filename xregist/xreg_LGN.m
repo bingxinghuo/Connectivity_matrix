@@ -65,6 +65,6 @@ for f=1:N_flu_files
     transmat=tf(5:6)*M;
     fbcelltf=rotmat*fbcellind'-transmat*ones(1,size(fbcellind,1));
     % hold on, scatter(fbcelltf(1,:),fbcelltf(2,:),'y*')
-    FBnew{fileids_nissl(f)}=fbcelltf';
+    FBnew{fileinds_flu(f)}=fbcelltf';
 end
 save([workdir,'FBdetect_xreg'],'FBnew')
