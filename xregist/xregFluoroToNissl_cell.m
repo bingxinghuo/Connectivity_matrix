@@ -3,7 +3,7 @@
 % Inputs:
 %   - nissljp2: a string containing the jp2 file of the Nissl section
 %   - fluorojp2: a string containing the jp2 file of the Nissl section
-function xregFluoroToNissl(nissljp2,fluorojp2,animalid,transformtxt,celljp2,M)
+function xregFluoroToNissl_cell(nissljp2,fluorojp2,animalid,transformtxt)
 if ~exist(transformtxt,'file')
     %% 1. Read in small tifs
     % 1.1 Nissl
@@ -62,9 +62,9 @@ if ~exist(transformtxt,'file')
         nissltif,' ',fluorotif,' ',fluorotif_deformed,' ',transformtxt]);    
 end
 %% 3. Apply the transformation matrix to fluorescent cell image
-celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
-status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
-    celljp2,' ',transformtxt,' ',M,' ',num2str(nisslwidth),' ',num2str(nisslheight),' ',celljp2_deformed]);
+% celljp2_deformed=[celljp2(1:end-4),'_deformed.jp2'];
+% status=system(['python ~/scripts/Connectivity_matrix/xregist/applyxregFluoroToNissl_cellmask.py ',...
+%     celljp2,' ',transformtxt,' ',M,' ',num2str(nisslwidth),' ',num2str(nisslheight),' ',celljp2_deformed]);
 % %% 4. Compress the image to JP2
 % nisslfinaljp2=[cellfinaltif(1:end-4),'.jp2'];
 % status=system(['/usr/local/Kakadu/v7_7-01668N/bin/Linux-x86-64-gcc/kdu_compress -i ',...
