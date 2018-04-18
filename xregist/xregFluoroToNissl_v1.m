@@ -3,7 +3,7 @@
 % Inputs:
 %   - nissljp2: a string containing the jp2 file of the Nissl section
 %   - fluorojp2: a string containing the jp2 file of the Nissl section
-function xregFluoroToNissl(nissljp2,fluorojp2,transformtxt)
+function xregFluoroToNissl_v1(nissljp2,fluorojp2,transformtxt)
 if ~exist(transformtxt,'file')
     %% 1. Read in images
     % 1.1 Nissl
@@ -13,7 +13,7 @@ if ~exist(transformtxt,'file')
         nisslimg=imread(nissljp2,'jp2');
         % downsample
         for i=1:3
-            nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),64);
+            nisslsmall(:,:,i)=downsample_mean(nisslimg(:,:,i),64);
         end
         % combine to grayscale
         nisslsmallgray=uint8(mean(nisslsmall,3));
@@ -27,7 +27,7 @@ if ~exist(transformtxt,'file')
         fluoroimg=imread(fluorojp2,'jp2');
         % downsample
         for i=1:3
-            fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),64);
+            fluorosmall(:,:,i)=downsample_mean(fluoroimg(:,:,i),64);
         end
         % combine to grayscale
         fluorosmallgray=uint8(mean(fluorosmall,3));

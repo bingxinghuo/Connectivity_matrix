@@ -23,7 +23,7 @@ if exist(ntifdir,'dir')
         %         [nisslheight,nisslwidth,~]=size(nisslimg);
         %         % downsample
         %         for i=1:3
-        %             nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),M);
+        %             nisslsmall(:,:,i)=downsample_mean(nisslimg(:,:,i),M);
         %         end
         %         % save
         %         imwrite(nisslsmall,nissltif,'tif','compression','lzw')
@@ -45,7 +45,7 @@ if exist(ftifdir,'dir')
         %         fluoroimg=imread(fluorojp2,'jp2');
         %         % downsample
         %         for i=1:3
-        %             fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),M);
+        %             fluorosmall(:,:,i)=downsample_mean(fluoroimg(:,:,i),M);
         %         end
         %         % save
         %         imwrite(fluorosmall,fluorotif,'tif','compression','lzw')

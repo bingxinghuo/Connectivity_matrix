@@ -18,7 +18,7 @@ if ~exist(transformtxt,'file')
             %         [nisslheight,nisslwidth,~]=size(nisslimg);
             %         % downsample
             %         for i=1:3
-            %             nisslsmall(:,:,i)=downsample_max(nisslimg(:,:,i),M);
+            %             nisslsmall(:,:,i)=downsample_mean(nisslimg(:,:,i),M);
             %         end
             %         % combine to grayscale
             %         nisslsmallgray=uint8(mean(nisslsmall,3));
@@ -43,7 +43,7 @@ if ~exist(transformtxt,'file')
             %         fluoroimg=imread(fluorojp2,'jp2');
             %         % downsample
             %         for i=1:3
-            %             fluorosmall(:,:,i)=downsample_max(fluoroimg(:,:,i),M);
+            %             fluorosmall(:,:,i)=downsample_mean(fluoroimg(:,:,i),M);
             %         end
             %         % combine to grayscale
             %         fluorosmallgray=uint8(mean(fluorosmall,3));
