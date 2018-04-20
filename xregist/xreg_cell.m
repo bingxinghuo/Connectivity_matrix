@@ -16,7 +16,7 @@
 %   - a transformation matrix saved in text file
 %   - All transformed FB cell counting for each Nissl section saved in
 %   FBdetect_xreg.mat, along with its corresponding fluorescent and Nissl
-%   section indices. 
+%   section indices.
 function xreg_cell(animalid,animaldir,secrangen)
 animalid=lower(animalid); % in case the input is upper case
 fludir=[animaldir,'/',animalid,'F/JP2/'];
@@ -49,7 +49,7 @@ for n=1:Nfiles
 end
 %% 2. generate the cell mask from fluorescent series
 cd(fludir)
-load('FBdetectdata.mat', 'FBclear')
+load('FBdetectdata_consolid.mat', 'FBclear')
 FBnissl=cell(length(nissllist),1); % FB cell counting matched to individual nissl sections
 for n=1:Nfiles
     fluid=flulist{fileinds_flu(n)};
@@ -57,9 +57,13 @@ for n=1:Nfiles
     % get the image mask
     celljp2=[workdir,fluid(1:end-4),'_cells.jp2'];
     if ~exist(celljp2,'file')
-        imgmask=load(maskmat{n});
-        maskvar=fieldnames(imgmask);
-        imgmask=getfield(imgmask,maskvar{1});
+        if exist([maskmat{n},'.mat'],'file')
+            imgmask=load(maskmat{n});
+            maskvar=fieldnames(imgmask);
+            imgmask=getfield(imgmask,maskvar{1});
+        elseif exist([maskmat{n},'.tif'],'file')
+            imgmask=imread([maskmat{n},'.tif']);
+        end
         cellmask=uint8(imgmask);
         fbcellind=[round(FBclear{fileinds_flu(n)}.x),round(FBclear{fileinds_flu(n)}.y)];
         % set index to 10 for cell centroids
