@@ -66,9 +66,11 @@ for n=1:Nfiles
         end
         cellmask=uint8(imgmask);
         fbcellind=[round(FBclear{fileinds_flu(n)}.x),round(FBclear{fileinds_flu(n)}.y)];
-        % set index to 10 for cell centroids
-        for i=1:size(fbcellind,1)
-            cellmask(fbcellind(i,2),fbcellind(i,1))=10;
+        if ~isempty(fbcellind)
+            % set index to 10 for cell centroids
+            for i=1:size(fbcellind,1)
+                cellmask(fbcellind(i,2),fbcellind(i,1))=10;
+            end
         end
         % save this mask as a jp2 file
         imwrite(cellmask,celljp2)
@@ -82,14 +84,18 @@ for n=1:Nfiles
         xregFluoroToNissl_cell(nissljp2{n},fluorojp2{n},animalid,transformtxt);
     end
     %% 4. transform cell coordinates
-    M=64;
-    tf=dlmread(transformtxt);
-    rotmat=[tf(1),tf(3);tf(2),tf(4)]; % rotation
-    transmat=tf(5:6)*M; % translation
-    % transform all cell coordinates
-    fbcelltf=rotmat*fbcellind'-transmat*ones(1,size(fbcellind,1));
-    % hold on, scatter(fbcelltf(1,:),fbcelltf(2,:),'y*')
-    %% 5. save cell coordinates for each Nissl section
-    FBnissl{fileinds_nissl(n)}=fbcelltf';
+    if ~isempty(fbcellind)
+        M=64;
+        tf=dlmread(transformtxt);
+        rotmat=[tf(1),tf(3);tf(2),tf(4)]; % rotation
+        transmat=tf(5:6)*M; % translation
+        % transform all cell coordinates
+        fbcelltf=rotmat*fbcellind'-transmat*ones(1,size(fbcellind,1));
+        % hold on, scatter(fbcelltf(1,:),fbcelltf(2,:),'y*')
+        %% 5. save cell coordinates for each Nissl section
+        FBnissl{fileinds_nissl(n)}=fbcelltf';
+    else
+        FBnissl{fileinds_nissl(n)}=[];
+    end
 end
 save([workdir,'FBdetect_xreg'],'FBnissl','fileinds_flu','fileinds_nissl')
