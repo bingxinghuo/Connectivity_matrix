@@ -15,7 +15,7 @@ if ~exist(seclistfile,'file')
     disp('Please establish section correspondence by running F_REG_secnum.py! ')
     %%%% run F_REG_secnum.py in shell
     % ANIMALID=822
-    % python ~/Documents/GITHUB/LGNPulvinarProj/injection_detection/F_REG_secnum.py M$ANIMALID F ~/CSHLservers/mitragpu3/marmosetRIKEN/NZ/m$ANIMALID/m$ANIMALID"F"/JP2-REG/m$ANIMALID"F-STIF" ~/"Dropbox (Marmoset)"/BingxingHuo/"Marmoset Brain Architecture"/"Paul Martin"/M$ANIMALID 91 190
+    % python ~/Documents/GITHUB/injection_detection/F_REG_secnum.py M$ANIMALID F ~/CSHLservers/mitragpu3/marmosetRIKEN/NZ/m$ANIMALID/m$ANIMALID"F"/JP2-REG/m$ANIMALID"F-STIF" ~/"Dropbox (Marmoset)"/BingxingHuo/"Marmoset Brain Architecture"/"Paul Martin"/M$ANIMALID 91 190
     %%%%
 end
 fid=fopen(seclistfile); % output from F_REG_secnum.py

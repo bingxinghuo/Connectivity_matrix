@@ -14,15 +14,15 @@
 % animalid='m1148'; rangeofinterest=288:313; originresolution=.92; bitinfo=12; % 1148
 % animalid='m919'; rangeofinterest=197:269; originresolution=.92; bitinfo=12; % 919
 % animalid='m822'; rangeofinterest=289:399; originresolution=.92; bitinfo=8; % 822
-% animalid='m820'; rangeofinterest=[80:102,243:300]; originresolution=.92; bitinfo=8; flips=[1,2]; % 820
+% animalid='m820'; rangeofinterest=[80:102,243:300]; originresolution=.92; bitinfo=8; flips=[1,2];% 820
 % animalid='m1228'; rangeofinterest=51:190; originresolution=.92; bitinfo=12; % 1228
-% animalid='m852'; rangeofinterest=25:130; originresolution=1.38; bitinfo=12; % 852
+% animalid='m852'; rangeofinterest=25:130; originresolution=.92; bitinfo=12; % 852
 % animalid='m921'; rangeofinterest=131:245; originresolution=1.4; bitinfo=12; % 921
 % animalid='m823'; rangeofinterest=63:112; originresolution=.92; bitinfo=8; % 823
 % animalid='m821'; rangeofinterest=35:103; originresolution=1.4; bitinfo=12; % 821
-% animalid='m917'; rangeofinterest=2:110; originresolution=1.38; bitinfo=12;
-% animalid='m918'; rangeofinterest=1:91; originresolution=1.38; bitinfo=12;
-function injmaparea=injection_anno(animalid,datadir,targetdir,bitinfo,originresolution,rangeofinterest,dsrate,flips)
+% animalid='m917'; rangeofinterest=2:110; originresolution=.92; bitinfo=12;
+% animalid='m918'; rangeofinterest=1:91; originresolution=.92; bitinfo=12;
+function injmaparea=injection_anno(animalid,datadir,targetdir,bitinfo,originresolution,rangeofinterest,dsrate)
 % set directory
 animalid=lower(animalid); % in case the input is upper case
 if bitinfo==8
@@ -92,9 +92,8 @@ end
 % get 3D reconstruction of annotation
 annoimgfile=[targetdir,upper(animalid),'/',upper(animalid),'_annotation.img'];
 seclistfile=[targetdir,upper(animalid),'/',upper(animalid),'F_anno_seclist.csv']; % correspondence file
-if nargin<8
-    flips=[];
-end
+flips=[];
+%  % 820 flip caudal-ventral; flip AP
 [annoimgs,seclist]=loadannoimg(annoimgfile,seclistfile,flips);
 [H1,N1,W1]=size(annoimgs);
 % anno3D
@@ -126,7 +125,7 @@ for c=1:3
     for f=rangeind
         injmap_anno(:,N1-40-seclist{2}(rangeofinterest(f))+1,:)=uint16(flip(injmap{f,c},1)); % flip back
         % map back to the annotation.img
-    end
+    end    
     % save
     for w=1:W1
         if w==1
@@ -135,13 +134,13 @@ for c=1:3
             imwrite(injmap_anno(:,:,w),[savedir,'/injanno',num2str(c),'stack.tiff'],'writemode','append','compression','none')
         end
     end
-    % 3. summarize region atlas labels and voxel numbers, A-by-2 matrix
-    injannolist=unique(nonzeros(injmap_anno));
-    A=length(injannolist);
-    injmaparea{c}=zeros(A,2);
-    for a=1:A
-        injmaparea{c}(a,1)=injannolist(a);
-        injmaparea{c}(a,2)=sum(sum(sum(injmap_anno==injannolist(a))));
-    end
+% 3. summarize region atlas labels and voxel numbers, A-by-2 matrix
+injannolist=unique(nonzeros(injmap_anno));
+A=length(injannolist);
+injmaparea{c}=zeros(A,2);
+for a=1:A
+    injmaparea{c}(a,1)=injannolist(a);
+    injmaparea{c}(a,2)=sum(sum(sum(injmap_anno==injannolist(a))));
+end
 end
 save([savedir,'/injareaanno.mat'],'injmaparea')
