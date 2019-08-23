@@ -19,7 +19,7 @@ if signalcolor=='g'
     signalmask=uint8(greenimg>intensity_thresh);
 elseif signalcolor=='r'
     hsvimg=rgb2hsv(inputimg);
-    redmask=(hsvimg(:,:,1)>345/346)+(hsvimg(:,:,1)<10/360); % color
+    redmask=(hsvimg(:,:,1)>(345/346))+(hsvimg(:,:,1)<(10/360)); % color
     I0=hsvimg(:,:,3)>.03;
     redmask=redmask.*I0; % remove empty areas
     S=(hsvimg(:,:,2)>.3).*I0; % filter saturation
