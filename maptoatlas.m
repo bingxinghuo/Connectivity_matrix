@@ -31,11 +31,11 @@ elseif isa(imglist,'cell') % a list of file names
         %     disp(['Processing ',imglist{i},'...'])
         img{i}=imread(imglist{i}); % read the image
     end
-elseif isa(imglist,'numeric')
+elseif isa(imglist,'numeric') % a volume input
     L=size(imglist,3);
     img=cell(L,1);
     for i=1:L
-        img{i}=imglist(:,:,i);
+        img{i}=imglist(:,:,i); % read out coronal sections
     end
 end
 C=size(img{1},3);
@@ -44,7 +44,7 @@ imgatlasmap=cell(size(imglist,1),C);
 for i=1:L
     % key step of orientating the annotation
     annomap=squeeze(annoimgs(:,40+seclist(i),:)); % 40 anterior padding
-    annomap=flip(annomap,1); % flip upside down
+%     annomap=flip(annomap,1); % flip upside down
     for c=1:C
         imgatlasmap{i,c}=single(zeros(size(annomap)));
         ifempty=sum(sum(img{i}(:,:,c)));
