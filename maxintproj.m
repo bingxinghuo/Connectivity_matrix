@@ -1,5 +1,5 @@
 %% maximal intensity projection
-targetdir='/Users/bingxinghuo/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/Paul Martin/';
+targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/Paul Martin/';
 datadir='~/CSHLservers/mitragpu3/marmosetRIKEN/NZ/';
 animalid='m820';
 % set directory
@@ -129,9 +129,9 @@ for c=1:C
     end
 end
 annosag=sum(annoimgs,3);
-% annosag1=flipdim(annosag,1);
-% annosag1=flipdim(annosag1,2);
-annosag1=annosag; % m820
+annosag1=flipdim(annosag,1);
+annosag1=flipdim(annosag1,2);
+% annosag1=annosag; % m820
 bwsag=annosag1>0;
 bwsag1=repelem(bwsag,87,1);
 bwsag2=downsample_max(bwsag1,64,1);
