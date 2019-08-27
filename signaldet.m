@@ -1,7 +1,5 @@
 function signalmask=signaldet(inputfile,signalcolor,bitinfo,outputdir)
 inputimg=imread(inputfile);
-[h,w,~]=size(inputimg);
-signalmask=uint8(zeros(h,w));
 if nargin>2
     if isempty(bitinfo)
         bitinfo=12;
@@ -10,25 +8,24 @@ else
     bitinfo=12;
 end
 if bitinfo==12
-    inputimg=uint8(inputimg/2^12*2^8); % convert to 8-bit
+    inputimg=uint16(inputimg*(2^16/2^12)); % scale to full 16-bit
 end
+hsvimg=rgb2hsv(inputimg);
 if signalcolor=='g'
-    intensity_thresh=80;
-    greenmask=inputimg(:,:,2)>(sum(inputimg(:,:,[1,3]),3));
-    greenimg=uint8(greenmask).*inputimg(:,:,2);
-    signalmask=uint8(greenimg>intensity_thresh);
+    c=2;
+    H0=(hsvimg(:,:,1)<150/360).*(hsvimg(:,:,1)>80/360); % green color
+    
 elseif signalcolor=='r'
-    hsvimg=rgb2hsv(inputimg);
-    redmask=(hsvimg(:,:,1)>(345/346))+(hsvimg(:,:,1)<(10/360)); % color
-    I0=hsvimg(:,:,3)>.03;
-    redmask=redmask.*I0; % remove empty areas
-    S=(hsvimg(:,:,2)>.3).*I0; % filter saturation
-    redmask=redmask.*S;
-    redmask=imfill(redmask,'holes');
-    redimg=uint8(redmask).*inputimg(:,:,1);
-    redfilt=medfilt2(redimg,[5,5]);
-    signalmask=uint8(redfilt>0);
+    c=1;
+    H0=(hsvimg(:,:,1)>(345/360))+(hsvimg(:,:,1)<(10/360)); % color
 end
+I0=hsvimg(:,:,3)>nanmean(nonzeros(hsvimg(:,:,3)));
+S0=hsvimg(:,:,2)>nanmean(nonzeros(hsvimg(:,:,2)));
+signalmask=H0.*I0.*S0;
+signalmask=imfill(signalmask,'holes');
+signalimg=cast(signalmask,'like',inputimg).*inputimg(:,:,c);
+signalfilt=medfilt2(signalimg,[5,5]);
+signalmask=uint8(signalfilt>0);
 if nargin>3
     if ~isempty(outputdir)
         [~,filename,~]=fileparts(inputfile);

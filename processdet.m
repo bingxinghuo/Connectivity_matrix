@@ -21,7 +21,7 @@ parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
 for i=3:length(motorbraininfo)
     workpath=[parentpath,'/',motorbraininfo(i).animalid,'/',motorbraininfo(i).animalid,'F/JP2-REG/'];
     cd(workpath)
-    for c=2:length(motorbraininfo(i).signalcolor)
+    for c=1:length(motorbraininfo(i).signalcolor)
         outputdir=[workpath,'/processmask_',motorbraininfo(i).signalcolor(c)];
         if ~exist(outputdir,'dir')
             mkdir(outputdir)
