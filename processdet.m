@@ -17,8 +17,10 @@ motorbraininfo(3).bitinfo=12;
 motorbraininfo(3).originresolution=.46*2;
 motorbraininfo(3).flips=[1,2];
 parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
+marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
+targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
 %%
-for i=3:length(motorbraininfo)
+for i=2:length(motorbraininfo)
     workpath=[parentpath,'/',motorbraininfo(i).animalid,'/',motorbraininfo(i).animalid,'F/JP2-REG/'];
     cd(workpath)
     for c=1:length(motorbraininfo(i).signalcolor)
@@ -34,5 +36,9 @@ for i=3:length(motorbraininfo)
             signaldet(filelist{f},signalcolor,bitinfo,outputdir);
             disp([filelist{f},' done.'])
         end
+        neuronvoxelize(motorbraininfo(i).animalid,'mba',workpath,['/processmask_',motorbraininfo(i).signalcolor(c)],...
+            outputdir,motorbraininfo(i).originresolution,80,['process_',motorbraininfo(i).signalcolor(c)],1);
+        regionneuronsummary(motorbraininfo(i),targetdir,['process_',motorbraininfo(i).signalcolor(c)],...
+            [targetdir,'/',motorbraininfo(i).animalid],marmosetlistfile);
     end
 end
