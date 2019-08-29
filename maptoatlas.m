@@ -52,10 +52,10 @@ for i=1:L
             if toresample==1
                 imgmask_up=repelem(img{i}(:,:,c),dsrate,dsrate);
                 imgmask_match=downsample_max(imgmask_up,conversion_factor,conversion_factor); % matched to annotation map resolution
-                imgmask_match=single(imgmask_match(1:H1,1:W1));
             else
-                imgmask_match=single(squeeze(img{i}(:,:,c)));
+                imgmask_match=squeeze(img{i}(:,:,c));
             end
+            imgmask_match=single(imgmask_match(1:H1,1:W1));
             imgatlasmap{i,c}=annomap.*imgmask_match;
         end
     end
