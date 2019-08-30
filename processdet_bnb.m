@@ -41,9 +41,11 @@ motorbraininfo(7).signalcolor='g';
 motorbraininfo(7).bitinfo=12;
 motorbraininfo(7).originresolution=.46*2;
 motorbraininfo(7).flips=[1,2];
-parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
-marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
-targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
+% parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
+parentpath='/nfs/mitraweb2/mnt/disk125/main/marmosetRIKEN/NZ';
+marmosetlistfile='~/scripts/Connectivity_matrix/marmosetregionlist.mat';
+% targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
+targetdir='~/';
 %%
 myCluster = parcluster('local'); % cores on compute node to be "local"
 poolobj=parpool(myCluster, 10);
@@ -51,15 +53,20 @@ addpath(genpath('~/scripts/'))
 for i=3:length(motorbraininfo)
     workpath=[parentpath,'/',motorbraininfo(i).animalid,'/',motorbraininfo(i).animalid,'F/JP2-REG/'];
     tissuemaskdir=[workpath,motorbraininfo(i).animalid,'F-STIF/imgmasks/'];
-    cd(workpath)
-    try
+    savedir=[targetdir,'/',motorbraininfo(i).animalid];
+    if ~exist(savedir)
+        mkdir(savedir)
+    end
+    cd(workpath)    
+    % test writing permission of workpath
+    if ~system('ls > test.txt') % if successful (success=0)
         procmaskdir=[workpath,'/processmask/'];
-        system('ls > test.txt'); % this is just to test for writing permission
         system('rm test.txt');
-    catch % if no writing permission to the workpath
+    else
+        % if no writing permission to the workpath
         procmaskdir=[targetdir,'/',motorbraininfo(i).animalid,'/processmask/'];
     end
-    filelist=jp2lsread;
+    filelist=filelsread('*.jp2',savedir);
     signalcolor=motorbraininfo(i).signalcolor;
     bitinfo=motorbraininfo(i).bitinfo;
     parfor f=1:length(filelist)
@@ -67,7 +74,6 @@ for i=3:length(motorbraininfo)
         signaldet(filelist{f},signalcolor,bitinfo,procmaskdir);
         disp([filelist{f},' done.'])
     end
-    savedir=[targetdir,'/',motorbraininfo(i).animalid];
     [outputdir0,~,~]=fileparts(procmaskdir); % remove "/" on the end
     for c=1:length(motorbraininfo(i).signalcolor)
         outputdir=[outputdir0,'_',signalcolor(c)];
