@@ -35,7 +35,7 @@ elseif isa(imglist,'numeric') % a volume input
     L=size(imglist,3);
     img=cell(L,1);
     for i=1:L
-        img{i}=imglist(:,:,i); % read out coronal sections
+        img{i}=squeeze(imglist(:,:,i,:)); % read out coronal sections
     end
 end
 C=size(img{1},3);
@@ -50,8 +50,9 @@ for i=1:L
         ifempty=sum(sum(img{i}(:,:,c)));
         if ifempty>0
             if toresample==1
-                imgmask_up=repelem(img{i}(:,:,c),dsrate,dsrate);
-                imgmask_match=downsample_max(imgmask_up,conversion_factor,conversion_factor); % matched to annotation map resolution
+%                 imgmask_up=repelem(img{i}(:,:,c),dsrate,dsrate);
+%                 imgmask_match=downsample_max(imgmask_up,conversion_factor,conversion_factor); % matched to annotation map resolution
+                imgmask_match=imadj_resolution(img{i}(:,:,c),originres,annores);
             else
                 imgmask_match=squeeze(img{i}(:,:,c));
             end
