@@ -87,9 +87,10 @@ for i=3:length(motorbraininfo)
     parfor f=1:length(filelist)
         [~,filename,~]=fileparts(filelist{f});
         maskfile=[tissuemaskdir,filename,'.tif'];
-        disp(['Detecting signals in ',filename,'...'])
+         procmaskfile=[procmaskdir,'/',filename,'.tif'];
+        disp(['Processing ',filename,'...'])
         tic;
-        signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskdir);
+        signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskfile);
         toc;
         disp([filelist{f},' done.'])
     end

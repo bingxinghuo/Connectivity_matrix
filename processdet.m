@@ -85,9 +85,10 @@ for i=3
     for f=1:length(filelist)
         [~,filename,~]=fileparts(filelist{f});
         maskfile=[tissuemaskdir,filename,'.tif'];
+        procmaskfile=[procmaskdir,'/',filename,'.tif'];
         disp(['Processing ',filename,'...'])
         tic;
-        signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskdir);
+        signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskfile);
         toc;
         disp([filelist{f},' done.'])
     end

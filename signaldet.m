@@ -48,7 +48,6 @@ end
 %%
 if nargin>5
     if ~isempty(signalmaskfile)
-        [~,filename,~]=fileparts(inputimg);
-        imwrite(signalmaskrgb,[signalmaskfile,'/',filename,'.tif'])
+        imwrite(signalmaskrgb,signalmaskfile)
     end
 end
