@@ -54,20 +54,23 @@ for i=3:length(motorbraininfo)
     animalid=motorbraininfo(i).animalid;
     signalcolor=motorbraininfo(i).signalcolor;
     bitinfo=motorbraininfo(i).bitinfo;
-    workpath=[parentpath,'/',motorbraininfo(i).animalid,'/',motorbraininfo(i).animalid,'F/JP2-REG/'];
-    tissuemaskdir=[workpath,motorbraininfo(i).animalid,'F-STIF/imgmasks/'];
-    savedir=[targetdir,'/',upper(motorbraininfo(i).animalid)];
+    workpath=[parentpath,'/',animalid,'/',animalid,'F/JP2-REG/'];
+    tissuemaskdir=[workpath,animalid,'F-STIF/imgmasks/'];
+    savedir=[targetdir,'/',upper(animalid)];
     if ~exist(savedir,'dir')
         mkdir(savedir)
     end
-    cd(workpath)    
+    cd(workpath)
     % test writing permission of workpath
     if ~system('ls > test.txt') % if successful (success=0)
         procmaskdir=[workpath,'/processmask/'];
         system('rm test.txt');
     else
         % if no writing permission to the workpath
-        procmaskdir=[targetdir,'/',motorbraininfo(i).animalid,'/processmask/'];
+        procmaskdir=[savedir,'/processmask/'];
+    end
+    if ~exist(procmaskdir,'dir')
+        mkdir(procmaskdir)
     end
     filelist=filelsread('*.jp2',savedir);
     %% set background standard
@@ -87,16 +90,16 @@ for i=3:length(motorbraininfo)
     parfor f=1:length(filelist)
         [~,filename,~]=fileparts(filelist{f});
         maskfile=[tissuemaskdir,filename,'.tif'];
-         procmaskfile=[procmaskdir,'/',filename,'.tif'];
+        procmaskfile=[procmaskdir,'/',filename,'.tif'];
         disp(['Processing ',filename,'...'])
         tic;
         signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskfile);
         toc;
         disp([filelist{f},' done.'])
     end
-%     [outputdir,~,~]=fileparts(procmaskdir); % remove "/" on the end
-%     neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,80,'process');
-%     regionneuronsummary(motorbraininfo(i),['process_',num2str(signalcolor(c))],savedir,marmosetlistfile);
-   
+    %     [outputdir,~,~]=fileparts(procmaskdir); % remove "/" on the end
+    %     neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,80,'process');
+    %     regionneuronsummary(motorbraininfo(i),['process_',num2str(signalcolor(c))],savedir,marmosetlistfile);
+    
 end
 delete(poolobj)
