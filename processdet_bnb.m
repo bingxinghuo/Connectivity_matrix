@@ -1,4 +1,4 @@
-motorbraininfo(1).animalid='m820';
+ motorbraininfo(1).animalid='m820';
 motorbraininfo(1).modality='mba';
 motorbraininfo(1).signalcolor=1;
 motorbraininfo(1).bitinfo=8;
@@ -12,8 +12,8 @@ motorbraininfo(2).originresolution=1.4;
 motorbraininfo(2).flips=[1,2];
 motorbraininfo(3).animalid='m823';
 motorbraininfo(3).modality='mba';
-% motorbraininfo(3).signalcolor=[1,2];
-motorbraininfo(3).signalcolor=[1];
+motorbraininfo(3).signalcolor=[1,2];
+% motorbraininfo(3).signalcolor=[1];
 motorbraininfo(3).bitinfo=12;
 motorbraininfo(3).originresolution=.46*2;
 motorbraininfo(3).flips=[1,2];
@@ -50,7 +50,7 @@ targetdir='~/';
 myCluster = parcluster('local'); % cores on compute node to be "local"
 poolobj=parpool(myCluster, 10);
 addpath(genpath('~/scripts/'))
-for i=3:length(motorbraininfo)
+for i=1:length(motorbraininfo)
     animalid=motorbraininfo(i).animalid;
     signalcolor=motorbraininfo(i).signalcolor;
     bitinfo=motorbraininfo(i).bitinfo;

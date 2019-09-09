@@ -40,7 +40,8 @@ motorbraininfo(7).signalcolor=2;
 motorbraininfo(7).bitinfo=12;
 motorbraininfo(7).originresolution=.46*2;
 motorbraininfo(7).flips=[1,2];
-parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
+% parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
+parentpath='~/CSHLservers/mitragpu3/marmosetRIKEN/NZ';
 marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
 %%
