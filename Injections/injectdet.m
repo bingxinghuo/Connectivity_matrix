@@ -71,7 +71,8 @@ targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCor
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
-for i=4:length(motorbraininfo)
+% for i=4:length(motorbraininfo)
+for i=6
     animalid=motorbraininfo(i).animalid;
     rangeofinterest=motorbraininfo(i).inject_sections;
     bitinfo=motorbraininfo(i).bitinfo;
@@ -118,8 +119,8 @@ for i=4:length(motorbraininfo)
     %         disp([filelist{f},' done.'])
     %     end
     savedir=[targetdir,'/',motorbraininfo(i).animalid];
-    [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
-    neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
+%     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
+%     neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
     regionneuronsummary(motorbraininfo(i),'inject',[targetdir,'/',motorbraininfo(i).animalid],marmosetlistfile);
 end
 % delete(poolobj)

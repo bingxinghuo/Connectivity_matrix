@@ -74,7 +74,7 @@ targetdir='~/';
 myCluster = parcluster('local'); % cores on compute node to be "local"
 poolobj=parpool(myCluster, 10);
 addpath(genpath('~/scripts/'))
-for i=5:length(motorbraininfo)
+for i=[4,6:length(motorbraininfo)]
     animalid=motorbraininfo(i).animalid;
     rangeofinterest=motorbraininfo(i).inject_sections;
     bitinfo=motorbraininfo(i).bitinfo;
