@@ -12,8 +12,7 @@ motorbraininfo(2).originresolution=1.4;
 motorbraininfo(2).flips=[1,2];
 motorbraininfo(3).animalid='m823';
 motorbraininfo(3).modality='mba';
-% motorbraininfo(3).signalcolor=[1,2];
-motorbraininfo(3).signalcolor=[1];
+motorbraininfo(3).signalcolor=[1,2];
 motorbraininfo(3).bitinfo=12;
 motorbraininfo(3).originresolution=.46*2;
 motorbraininfo(3).flips=[1,2];
@@ -48,8 +47,7 @@ targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCor
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
-% for i=3:length(motorbraininfo)
-for i=3
+for i=4:length(motorbraininfo)
     animalid=motorbraininfo(i).animalid;
     signalcolor=motorbraininfo(i).signalcolor;
     bitinfo=motorbraininfo(i).bitinfo;
@@ -69,31 +67,31 @@ for i=3
     filelist=jp2lsread;
     
     %% set background standard
-    bgfile=[workpath,'/background_standard.mat'];
-    tifdir=[workpath,'/',animalid,'F-STIF/'];
-    if exist(bgfile,'file')
-        load(bgfile); % load bgimgmed0 from contrastadj3.m
-    else
-        bgfile=[injmaskdir,'/background_standard.mat'];
-        if exist(bgfile,'file')
-            load(bgfile); % load bgimgmed0 from contrastadj3.m
-        else
-            % contrastadj3.m
-            [~,bgimgmed0,~]=bgstandard(filelist,tifdir,tissuemaskdir,savedir);
-        end
-    end
-    for f=1:length(filelist)
-        [~,filename,~]=fileparts(filelist{f});
-        maskfile=[tissuemaskdir,filename,'.tif'];
-        procmaskfile=[procmaskdir,'/',filename,'.tif'];
-        disp(['Processing ',filename,'...'])
-        tic;
-        signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskfile);
-        toc;
-        disp([filelist{f},' done.'])
-    end
-%     [outputdir,~,~]=fileparts(procmaskdir); % remove "/" on the end
-%     neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,80,'process');
-%     regionneuronsummary(motorbraininfo(i),['process_',num2str(signalcolor(c))],savedir,marmosetlistfile);
+%     bgfile=[workpath,'/background_standard.mat'];
+%     tifdir=[workpath,'/',animalid,'F-STIF/'];
+%     if exist(bgfile,'file')
+%         load(bgfile); % load bgimgmed0 from contrastadj3.m
+%     else
+%         bgfile=[injmaskdir,'/background_standard.mat'];
+%         if exist(bgfile,'file')
+%             load(bgfile); % load bgimgmed0 from contrastadj3.m
+%         else
+%             % contrastadj3.m
+%             [~,bgimgmed0,~]=bgstandard(filelist,tifdir,tissuemaskdir,savedir);
+%         end
+%     end
+%     for f=1:length(filelist)
+%         [~,filename,~]=fileparts(filelist{f});
+%         maskfile=[tissuemaskdir,filename,'.tif'];
+%         procmaskfile=[procmaskdir,'/',filename,'.tif'];
+%         disp(['Processing ',filename,'...'])
+%         tic;
+%         signaldet(filelist{f},signalcolor,maskfile,bgimgmed0,bitinfo,procmaskfile);
+%         toc;
+%         disp([filelist{f},' done.'])
+%     end
+    [outputdir,~,~]=fileparts(procmaskdir); % remove "/" on the end
+    neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,80,'process');
+    regionneuronsummary(motorbraininfo(i),'process',savedir,marmosetlistfile);
 end
 % delete(poolobj)
