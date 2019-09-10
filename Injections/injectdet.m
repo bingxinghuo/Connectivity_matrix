@@ -56,12 +56,16 @@ motorbraininfo(7).injectcolor=2;
 motorbraininfo(7).flips=[1,2];
 motorbraininfo(8).animalid='m819';
 motorbraininfo(8).modality='mba';
+motorbraininfo(8).bitinfo=8;
+motorbraininfo(8).originresolution=.46*2;
 motorbraininfo(8).signalcolor=3;
 motorbraininfo(8).inject_sections=162:232; % FB
 motorbraininfo(8).injectcolor=3;
 motorbraininfo(9).animalid='m918';
 motorbraininfo(9).modality='mba';
+motorbraininfo(9).bitinfo=12;
 motorbraininfo(9).signalcolor=3;
+motorbraininfo(9).originresolution=1.4;
 motorbraininfo(9).inject_sections=1:91; % FB
 motorbraininfo(9).injectcolor=3;
 parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
@@ -72,7 +76,7 @@ targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCor
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
 % for i=4:length(motorbraininfo)
-for i=6
+for i=8
     animalid=motorbraininfo(i).animalid;
     rangeofinterest=motorbraininfo(i).inject_sections;
     bitinfo=motorbraininfo(i).bitinfo;
@@ -119,8 +123,8 @@ for i=6
     %         disp([filelist{f},' done.'])
     %     end
     savedir=[targetdir,'/',motorbraininfo(i).animalid];
-%     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
-%     neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
+    [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
+    neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
     regionneuronsummary(motorbraininfo(i),'inject',[targetdir,'/',motorbraininfo(i).animalid],marmosetlistfile);
 end
 % delete(poolobj)
