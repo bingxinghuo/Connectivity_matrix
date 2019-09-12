@@ -14,12 +14,12 @@ motorbraininfo(8).signalcolor=3;
 motorbraininfo(8).inject_sections=162:232; % FB
 motorbraininfo(8).injectcolor=3;
 motorbraininfo(8).bitinfo=8;
-parentpath='/nfs/mitraweb2/mnt/disk125/main/marmosetRIKEN/NZ';
-% parentpath='~/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
-% marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
-marmosetlistfile='~/scripts/Connectivity_matrix/marmosetregionlist.mat';
-% targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
-targetdir='~/';
+% parentpath='/nfs/mitraweb2/mnt/disk125/main/marmosetRIKEN/NZ';
+parentpath='~/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
+marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
+% marmosetlistfile='~/scripts/Connectivity_matrix/marmosetregionlist.mat';
+targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
+% targetdir='~/';
 %%
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % addpath(genpath('~/'))
@@ -56,7 +56,7 @@ for i=8
     % initialize
     FBclear=cell(Nfiles,1);
     %% 1. Go through every image
-    for f=1:Nfiles
+    parfor f=1:Nfiles
         [~,filename,~]=fileparts(filelist{f});
         maskfile=[tissuemaskdir,filename,'.tif'];
         disp(['Processing ',filename,'...'])
@@ -76,4 +76,4 @@ for i=8
 %% Save all detected cells into one variable
 save([savedir,'/FBdetectdata_consolid'],'FBclear')
 end
-% delete(poolobj)
+delete(poolobj)

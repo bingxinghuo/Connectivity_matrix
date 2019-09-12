@@ -61,6 +61,7 @@ motorbraininfo(8).originresolution=.46*2;
 motorbraininfo(8).signalcolor=3;
 motorbraininfo(8).inject_sections=162:232; % FB
 motorbraininfo(8).injectcolor=3;
+motorbraininfo(8).flips=[1,2];
 motorbraininfo(9).animalid='m918';
 motorbraininfo(9).modality='mba';
 motorbraininfo(9).bitinfo=12;
@@ -68,6 +69,7 @@ motorbraininfo(9).signalcolor=3;
 motorbraininfo(9).originresolution=1.4;
 motorbraininfo(9).inject_sections=1:91; % FB
 motorbraininfo(9).injectcolor=3;
+motorbraininfo(9).flips=[1,2];
 parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
 marmosetlistfile='~/Documents/GITHUB/Connectivity_matrix/marmosetregionlist.mat';
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
@@ -76,7 +78,7 @@ targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCor
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
 % for i=4:length(motorbraininfo)
-for i=8
+for i=8:9
     animalid=motorbraininfo(i).animalid;
     rangeofinterest=motorbraininfo(i).inject_sections;
     bitinfo=motorbraininfo(i).bitinfo;
@@ -96,35 +98,35 @@ for i=8
     end
     filelist=jp2lsread;
     %% set background standard
-    %     bgfile=[workpath,'/background_standard.mat'];
-    %     tifdir=[workpath,'/',animalid,'F-STIF/'];
-    %     if exist(bgfile,'file')
-    %         load(bgfile); % load bgimgmed0 from contrastadj3.m
-    %     else
-    %         bgfile=[injmaskdir,'/background_standard.mat'];
-    %         if exist(bgfile,'file')
-    %             load(bgfile); % load bgimgmed0 from contrastadj3.m
-    %         else
-    %             % contrastadj3.m
-    %             [~,bgimgmed0,~]=bgstandard(filelist,tifdir,tissuemaskdir,injmaskdir);
-    %         end
-    %     end
-    %     cd(tifdir)
-    %     for f=rangeofinterest
-    %         [~,filename,~]=fileparts(filelist{f});
-    %         disp(['Processing ',filename,'...'])
-    %         maskfile=[tissuemaskdir,filename,'.tif'];
-    %         if ~exist(maskfile,'file')
-    %             maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f)];
-    %         end
-    %         imgmask=imread(maskfile);
-    %         injmaskfile=[injmaskdir,filename,'.tif'];
-    %         injection_extent(filename,imgmask,bgimgmed0,injcolor,injmaskfile);
-    %         disp([filelist{f},' done.'])
-    %     end
+%         bgfile=[workpath,'/background_standard.mat'];
+%         tifdir=[workpath,'/',animalid,'F-STIF/'];
+%         if exist(bgfile,'file')
+%             load(bgfile); % load bgimgmed0 from contrastadj3.m
+%         else
+%             bgfile=[injmaskdir,'/background_standard.mat'];
+%             if exist(bgfile,'file')
+%                 load(bgfile); % load bgimgmed0 from contrastadj3.m
+%             else
+%                 % contrastadj3.m
+%                 [~,bgimgmed0,~]=bgstandard(filelist,tifdir,tissuemaskdir,injmaskdir);
+%             end
+%         end
+%         cd(tifdir)
+%         for f=rangeofinterest
+%             [~,filename,~]=fileparts(filelist{f});
+%             disp(['Processing ',filename,'...'])
+%             maskfile=[tissuemaskdir,filename,'.tif'];
+%             if ~exist(maskfile,'file')
+%                 maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f)];
+%             end
+%             imgmask=imread(maskfile);
+%             injmaskfile=[injmaskdir,filename,'.tif'];
+%             injection_extent(filename,imgmask,bgimgmed0,injcolor,injmaskfile);
+%             disp([filelist{f},' done.'])
+%         end
     savedir=[targetdir,'/',motorbraininfo(i).animalid];
-    [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
-    neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
+%     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
+%     neurondensity=neuronvoxelize(motorbraininfo(i),tissuemaskdir,injdir,savedir,motorbraininfo(i).originresolution*64,80,'inject');
     regionneuronsummary(motorbraininfo(i),'inject',[targetdir,'/',motorbraininfo(i).animalid],marmosetlistfile);
 end
 % delete(poolobj)

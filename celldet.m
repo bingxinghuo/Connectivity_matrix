@@ -17,7 +17,7 @@ if ~isempty(bwimg)
     bwimg_new=bwimg_new+bwimg_patch{1}; % all individual cells now
     clear bwimg_patch
     %% 3. feature filters
-    %     bwimg_filt=cellcolor(bwimg_new,fluoroimg); % check the color of cells
+%         bwimg_filt=cellcolor(bwimg_new,rgbimg); % check the color of cells
     bwimg_filt=cellsize(bwimg_new,sizepar); % filter for cell sizes
     bwimg_filt=eccentricity(bwimg_filt,eccpar(2)); % the cell need to be more round than linear
     % L=cellSNR(L,imgbit,bitinfo); % filter for SNR
