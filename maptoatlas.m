@@ -46,7 +46,7 @@ for i=1:L
         % key step of orientating the annotation
         annomap=squeeze(annoimgs(:,40+seclist(i),:)); % 40 anterior padding
     else
-        annomap=squeeze(annoimgs(:i,:));
+        annomap=squeeze(annoimgs(:,i,:));
     end
     %     annomap=flip(annomap,1); % flip upside down
     for c=1:C
