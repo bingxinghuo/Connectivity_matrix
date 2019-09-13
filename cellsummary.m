@@ -1,7 +1,7 @@
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
 neuroncount=cell(3,1);
 load('MOinjsummary')
-injinfo=M2inj;
+injinfo=M1inj;
 tracerinj{1}=injinfo(injinfo(:,2)<3,:);
 tracerinj{2}=injinfo(injinfo(:,2)==3,:);
 for t=2
