@@ -1,5 +1,5 @@
-detecttype='inject';
-for i=8:9
+detecttype='process';
+for i=6
     animalid=motorbraininfo(i).animalid;
     bitinfo=motorbraininfo(i).bitinfo;
     injcolor=motorbraininfo(i).injectcolor;
@@ -25,7 +25,7 @@ for i=8:9
             for w=1:W1
                 mapinjvol(:,:,w)=imread(mapinjvolfile,w);
             end
-            mapinjid=uint16((mapinjvol>0).*annoimgs);
+            mapinjid=uint16((mapinjvol>100).*annoimgs);
             imwrite(mapinjid(:,:,1),mapinjidfile,'writemode','overwrite','compression','none')
             for w=2:W1
                 imwrite(mapinjid(:,:,w),mapinjidfile,'writemode','append','compression','none')
