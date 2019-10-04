@@ -47,12 +47,12 @@ end
 [~,regionsorti]=sort(regioni1,'ascend');
 affave=affave(regionsorti,:);
 %%
-effraw=effraw';
+% effraw=effraw';
 effave(:,1)=mean(effraw(:,1:10),2);
 effave(:,2)=mean(effraw(:,11:16),2);
 effave=effave(1:296,:)+effave(297:end,:);
 %% names
-regionsort=regions(regionsorti);
+% regionsort=regions(regionsorti);
 regionnamei=zeros(1,size(regionname,2));
 k=1;
 for i=1:size(regionname,2)

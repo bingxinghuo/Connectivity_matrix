@@ -1,10 +1,11 @@
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
+cd(targetdir)
 neuroncount=cell(3,1);
 load('MOinjsummary')
-injinfo=M1inj;
+injinfo=M2inj;
 tracerinj{1}=injinfo(injinfo(:,2)<3,:);
 tracerinj{2}=injinfo(injinfo(:,2)==3,:);
-for t=2
+for t=1
     tracerinfo=tracerinj{t};
     if t==1
         detecttype='process';
