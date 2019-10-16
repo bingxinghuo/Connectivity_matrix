@@ -46,3 +46,21 @@ for d=1:D
         
     end
 end
+%%
+D=length(imfinfo('neuron_AA0923.tif'))
+for d=1:D
+neuron927(:,:,d)=imread('neuron_AA0927.tif',d);
+end
+neuron927=neuron927(11:end-10,11:end-10,11:end-10);
+annoimg=nhdr_nrrd_read('annotation_50.nrrd',1);
+annoimg=permute(annoimg.data,[3,2,1]);
+%%
+% neuronskel1=neuronskel(1:W,1:H,1:D);
+% neuronskel1=neuron926;
+skelregionvol=annoimg.*uint32(neuronskel1>0);
+skelregionids=nonzeros(unique(skelregionvol));
+for s=1:length(skelregionids)
+    skelregionids(s,2)=sum(sum(sum(skelregionvol==skelregionids(s))));
+end
+[~,isort]=sort(skelregionids(:,2),'descend');
+skelregionids=skelregionids(isort,:);
