@@ -1,11 +1,13 @@
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
+% targetdir='~/Dropbox (Marmoset)/BingxingHuo/Mouse/MotorCortex/';
 cd(targetdir)
 neuroncount=cell(3,1);
-load('MOinjsummary')
+load('MOsummary/MOinjsummary')
+% load('MOsummary/MOanimalinfo')
 injinfo=M2inj;
 tracerinj{1}=injinfo(injinfo(:,2)<3,:);
 tracerinj{2}=injinfo(injinfo(:,2)==3,:);
-for t=1
+for t=2
     tracerinfo=tracerinj{t};
     if t==1
         detecttype='process';
@@ -14,7 +16,8 @@ for t=1
     end
     for k=1:size(tracerinfo,1)
         i=tracerinfo(k,1);
-        animalid=motorbraininfo(i).animalid;
+                animalid=motorbraininfo(i).animalid;
+%         animalid=animallist{i,1};
         savedir=[targetdir,'/',upper(animalid)];
         if strcmp(detecttype,'cell')
             sumfile=[savedir,'/',animalid,'_region',detecttype,'.csv'];
@@ -65,7 +68,7 @@ for t=1
         ind=[];
         while isempty(ind)
             a=a+1;
-            if a<=14
+            if a<=size(regionlabel,1)
                 ind=find(regionlabel{a,3}(:,1)==regionid);
             else
                 break
@@ -78,7 +81,7 @@ for t=1
     neuronsorted=cell2mat(regionsummary(:,3));
     figure, imagesc(mean(neuronsorted(:,2:end),2))
     colormap hot
-%     caxis([10 1000])
+    %     caxis([10 1000])
     figure, imagesc(neuronsorted(:,2:end))
     colormap hot
 end
@@ -89,9 +92,9 @@ end
 % regionlabel{k,3}=id;
 % k=k+1;
 %%
-% A=[];k=0;
-% for a=1:14
-%     k=k+1;
-%     A=[A,ones(1,length(regionlabel{a,3}))*k];
-% end
-% figure, imagesc(A')
+A=[];k=0;
+for a=1:size(regionlabel,1)
+    k=k+1;
+    A=[A,ones(1,length(regionlabel{a,3}))*k];
+end
+figure, imagesc(A')

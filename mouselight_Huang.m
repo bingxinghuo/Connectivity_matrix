@@ -1,10 +1,10 @@
-addpath(genpath('/Users/bingxinghuo/Dropbox (Marmoset)/BingxingHuo/Mouse/Standard IO/conversion_scripts'))
-swcdir='/Users/bingxinghuo/Dropbox (Marmoset)/BingxingHuo/Mouse/MotorCortex/MouseLight_MOp5/';
+addpath(genpath('~/Dropbox (Marmoset)/BingxingHuo/Mouse/Standard IO/conversion_scripts'))
+swcdir='~/Dropbox (Marmoset)/BingxingHuo/Mouse/MotorCortex/MouseLight_MOp5/';
 mlid={'AA0927';'AA0926';'AA0923'};
 for n=1:3
 ml{n} = load_v3d_swc_file([swcdir,mlid{n},'.swc']);
 end
-stpdir='/Users/bingxinghuo/Dropbox (Marmoset)/BingxingHuo/Mouse/BICCN/Huang U19/180830/';
+stpdir='~/Dropbox (Marmoset)/BingxingHuo/Mouse/BICCN/Huang U19/180830/';
 stpatlas=load_nii([stpdir,'/180830_atlas_50.img']);
 stpimg=stpatlas.img;
 % ------ temporary fix orientation ---
