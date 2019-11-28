@@ -44,9 +44,10 @@ imgatlasmap=cell(size(imglist,1),C);
 for i=1:L
     if ~isempty(seclist)
         % key step of orientating the annotation
-        annomap=squeeze(annoimgs(:,40+seclist(i),:)); % 40 anterior padding
+        annomap=squeeze(annoimgs(:,40+seclist(i),:))>0; % 40 anterior padding
     else
-        annomap=squeeze(annoimgs(:,i,:));
+%         annomap=squeeze(annoimgs(:,i,:));
+        annomap=squeeze(annoimgs(:,:,i))>0;
     end
     %     annomap=flip(annomap,1); % flip upside down
     for c=1:C
@@ -60,7 +61,8 @@ for i=1:L
             else
                 imgmask_match=squeeze(img{i}(:,:,c));
             end
-            imgmask_match=single(imgmask_match(1:H1,1:W1));
+%             imgmask_match=single(imgmask_match(1:H1,1:W1));
+            imgmask_match=single(imgmask_match(1:H1,1:N1));
             imgatlasmap{i,c}=annomap.*imgmask_match;
         end
     end
@@ -69,17 +71,18 @@ end
 signalmap_anno=cell(1,C);
 % 1. by color channel
 for c=1:C
-    signalmap_anno{c}=uint16(zeros(size(annoimgs)));
+    signalmap_anno{c}=(zeros(size(annoimgs)));
     % 2. record all voxel locations on annotation.img
     % (note: later on we can apply the distortion map to restore the true volume)
     if ~isempty(seclist)
         for i=1:L
-            signalmap_anno{c}(:,40+seclist(i),:)=uint16(imgatlasmap{i,c});
+            signalmap_anno{c}(:,40+seclist(i),:)=(imgatlasmap{i,c});
             % map back to the annotation.img
         end
     else
         for i=1:L
-            signalmap_anno{c}(:,i,:)=uint16(imgatlasmap{i,c});
+%             signalmap_anno{c}(:,i,:)=uint16(imgatlasmap{i,c});
+            signalmap_anno{c}(:,:,i)=(imgatlasmap{i,c});
             % map back to the annotation.img
         end
     end
@@ -92,13 +95,15 @@ if nargin==7
         % 1. by color channel
         for c=1:C
             % save
-            for w=1:W1
-                if w==1
-                    imwrite(signalmap_anno{c}(:,:,w),[filepath,'/',filename,'_',num2str(c),'.tif'],'writemode','overwrite','compression','none')
-                else
-                    imwrite(signalmap_anno{c}(:,:,w),[filepath,'/',filename,'_',num2str(c),'.tif'],'writemode','append','compression','none')
-                end
-            end
+%             for w=1:W1
+%                 if w==1
+%                     imwrite(signalmap_anno{c}(:,:,w),[filepath,'/',filename,'_',num2str(c),'.tif'],'writemode','overwrite','compression','none')
+%                 else
+%                     imwrite(signalmap_anno{c}(:,:,w),[filepath,'/',filename,'_',num2str(c),'.tif'],'writemode','append','compression','none')
+%                 end
+%             end
+            mapvol=signalmap_anno{c};
+            save([filepath,'/',filename,'_',num2str(c),'.mat'],'mapvol')
         end
     end
 end
