@@ -85,12 +85,7 @@ for t=1
     figure, imagesc(neuronsorted(:,2:end))
     colormap hot
 end
-%% generate label bar
-% childs=childreninfo(marmosetlist,regionlabel{k,1},0);
-% id=cell2mat(childs(:,4));
-% regionlabel{k,2}=childs{1,2};
-% regionlabel{k,3}=id;
-% k=k+1;
+
 %%
 A=[];k=0;
 for a=1:size(regionlabel,1)

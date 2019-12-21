@@ -1,10 +1,15 @@
-% load('CCFregionlist.mat', 'AllenConnMatregions')
+load('CCFregionlist.mat', 'AllenConnMatregions')
+%%
+commonmouseLUTind=nonzeros(unique(M1ant.mouse(:,3)));
+LUT1=cell(size(LUT.mouse));
+LUT1(commonmouseLUTind,:)=LUT.mouse(commonmouseLUTind,:);
+%% find region indices in the LUT
 Allenmatch=zeros(size(AllenConnMatregions,1),1);
 for i=1:size(AllenConnMatregions,1)
     AllenConnMatregions(i,3)=mouselist(AllenConnMatregions{i,2},4);
-    Allenmatch(i)=regionsinLUT(AllenConnMatregions{i,3},LUT.mouse,mouselist);
+    Allenmatch(i)=regionsinLUT(AllenConnMatregions{i,3},LUT1,mouselist);
 end
-%%
+%% find region indices in the LUT
 Allenmatch=num2cell(Allenmatch);
 for i=1:length(Allenmatch)   
     if Allenmatch{i}==0
@@ -12,24 +17,25 @@ for i=1:length(Allenmatch)
             childs=childreninfo(mouselist,AllenConnMatregions{i,3},0);
             childsid=cell2mat(childs(2:end,4));
             for k=1:length(childsid)
-                Allenmatch{i}=[Allenmatch{i};regionsinLUT(childsid(k),LUT.mouse,mouselist)];
+                Allenmatch{i}=[Allenmatch{i};regionsinLUT(childsid(k),LUT1,mouselist)];
             end
     end
 end
-%%
+%% find region indices in the LUT
 for i=1:length(Allenmatch)   
     if sum(Allenmatch{i})==0
         k=0;
         Allenmatch{i}=0;
+        parents=lineageinfo(mouselist,AllenConnMatregions{i,3},0);
+            parentsid=flip(cell2mat(parents(:,4)));
         while sum(Allenmatch{i})==0
             k=k+1;
-            parents=lineageinfo(mouselist,AllenConnMatregions{i,3},0);
-            parentsid=flip(cell2mat(parents(:,4)));
-            Allenmatch{i}=regionsinLUT(parentsid(k),LUT.mouse,mouselist);
+            
+            Allenmatch{i}=regionsinLUT(parentsid(k),LUT1,mouselist);
         end
     end
 end
-%%
+%% match with top level regions
 for i=1:length(Allenmatch)
     if length(Allenmatch{i,1})>1
         regionid=unique(nonzeros(Allenmatch{i,1}));
@@ -71,7 +77,7 @@ eff_ipsi=eff_ipsi';
 eff_contra=eff_contra';
 eff_ipsi_perc=eff_ipsi./(ones(size(eff_ipsi,1),1)*sum([eff_ipsi;eff_contra]));
 eff_contra_perc=eff_contra./(ones(size(eff_ipsi,1),1)*sum([eff_ipsi;eff_contra]));
-% M1allenmat.ipsi=eff_ipsi(:,1)/(sum(eff_ipsi(:,1)+eff_contra(:,1)));
+% M1allenmat.ipsi=eff_ipsi(:,1)/(sum(eff_ipsi(:,1)+eff_contra   (:,1)));
 % M1allenmat.contra=eff_contra(:,1)/(sum(eff_ipsi(:,1)+eff_contra(:,1)));
 % M2allenmat.ipsi=eff_ipsi(:,2)/(sum(eff_ipsi(:,2)+eff_contra(:,2)));
 % M2allenmat.contra=eff_contra(:,2)/(sum(eff_ipsi(:,2)+eff_contra(:,2)));
