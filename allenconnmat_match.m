@@ -58,7 +58,7 @@ end
 k=1;
 for i=1:length(Allenmatch)
     if isempty(Allenmatch{i,2})
-        i
+        Allenmatch{i,2}=0;
 %         Allenmatch_supp{k,1}=Allenmatch{i,1};
 %         k=k+1;
     end
