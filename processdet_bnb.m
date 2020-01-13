@@ -44,6 +44,7 @@
 % parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
 parentpath='/nfs/mitraweb2/mnt/disk125/main/marmosetRIKEN/NZ';
 marmosetlistfile='~/scripts/Connectivity_matrix/marmosetregionlist.mat';
+maskscale=64; % default STIF downsample for marmoset data
 % targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
 targetdir='~/';
 load([targetdir,'/MOanimalinfo.mat']) % a mat file that contains the metadata in structure format
@@ -101,7 +102,7 @@ for i=1:length(motorbraininfo)
 %     end
 %% summarize
         [outputdir,~,~]=fileparts(procmaskdir); % remove "/" on the end
-        neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,80,'process');
+        neuronvoxelize(motorbraininfo(i),tissuemaskdir,outputdir,savedir,motorbraininfo(i).originresolution,maskscale,80,'process');
         regionneuronsummary(motorbraininfo(i),'process',savedir,marmosetlistfile);
     
 end
