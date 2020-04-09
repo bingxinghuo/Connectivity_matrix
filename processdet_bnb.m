@@ -41,12 +41,13 @@
 % motorbraininfo(7).bitinfo=12;
 % motorbraininfo(7).originresolution=.46*2;
 % motorbraininfo(7).flips=[1,2];
+serverdir=['~/CSHLservers/mitragpu5/M25/'];
 % parentpath='/Users/bhuo/CSHLservers/mitragpu3/disk125/main/marmosetRIKEN/NZ';
-parentpath='/nfs/mitraweb2/mnt/disk125/main/marmosetRIKEN/NZ';
+parentpath=[serverdir,'/marmosetRIKEN/NZ'];
 marmosetlistfile='~/scripts/Connectivity_matrix/marmosetregionlist.mat';
 maskscale=64; % default STIF downsample for marmoset data
-% targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
-targetdir='~/';
+targetdir='~/Dropbox (Mitra Lab)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/MOsummary/';
+% targetdir='~/';
 load([targetdir,'/MOanimalinfo.mat']) % a mat file that contains the metadata in structure format
 %%
 myCluster = parcluster('local'); % cores on compute node to be "local"

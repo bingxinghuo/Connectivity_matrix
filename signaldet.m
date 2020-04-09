@@ -8,12 +8,18 @@ if isa(imgmask,'char')
 end
 [rowm,colm]=size(imgmask);
 if rowi~=rowm
-M=[ceil(rowi/rowm),ceil(coli/colm)];
-imgmask1=repelem(imgmask,M(1),M(2));
-imgmask=imgmask1(1:rowi,1:coli);
+    M=[ceil(rowi/rowm),ceil(coli/colm)];
+    imgmask1=repelem(imgmask,M(1),M(2));
+    imgmask=imgmask1(1:rowi,1:coli);
 end
+imgmask=cast(imgmask,'like',inputimg);
 %% 1. preprocess
-fluimg1=bgadj(inputimg,imgmask,bgimgmed0); % adjust background
+bgu=unique(bgimgmed0);
+if length(bgu)==1 && bgu(1)==0
+    fluimg1=inputimg.*imgmask;
+else
+    fluimg1=bgadj(inputimg,imgmask,bgimgmed0); % adjust background
+end
 if nargin>4
     if isempty(bitinfo)
         bitinfo=12;
@@ -40,7 +46,8 @@ for sc=1:length(signalcolor)
     S1=hsvimg(:,:,2)>nanmean(nonzeros(hsvimg(:,:,2).*H1));
     signalmask=H1.*I1.*S1;
     signalmask=imfill(signalmask,'holes');
-    signalimg=single(signalmask).*fluimg1(:,:,c);
+    signalmask=cast(signalmask,'like',fluimg1);
+    signalimg=signalmask.*fluimg1(:,:,c);
     signalfilt=medfilt2(signalimg,[5,5]);
     signalmask=uint8(signalfilt>0);
     signalmaskrgb(:,:,c)=signalmask;
