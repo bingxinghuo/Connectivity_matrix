@@ -1,9 +1,9 @@
 %%
-annoimgfile='/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Marmoset/MarmosetBrainAtlases/2015 RIKEN/Brian transformed atlas/annotation_80_flip.img';
-annoimgs=analyze75read(annoimgfile);
+% annoimgfile='/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Marmoset/MarmosetBrainAtlases/2015 RIKEN/Brian transformed atlas/annotation_80_flip.img';
+% annoimgs=analyze75read(annoimgfile);
 %%
 % AP=0 coronal plane (ear bar) is at annoimgs(326,:,:)
-origin=[326,0,170];
+% origin=[326,0,170]; % marmoset
 %%
 % uiopen('/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Marmoset/Joint_Analysis/Navigator_injection (2).csv',1)
 Navigatorinjection2 = sortrows(Navigatorinjection2,'VarName2','descend');
