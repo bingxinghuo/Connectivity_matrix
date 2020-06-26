@@ -47,6 +47,8 @@ maskscale=64; % default STIF downsample for marmoset data
 targetdir='~/Dropbox (Marmoset)/BingxingHuo/Marmoset Brain Architecture/MotorCortex/';
 load([targetdir,'/MOanimalinfo.mat']) % a mat file that contains the metadata in structure format
 %%
+annoimgfile='/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Marmoset/MarmosetBrainAtlases/2015 RIKEN/Brian transformed atlas/annotation_80_flip.img';
+annoimgs=analyze75read(annoimgfile);
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
