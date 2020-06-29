@@ -42,6 +42,25 @@ for d=1:length(injbytracer)
     end
 end
 save('allinjinfo','Navigatorinjection2','injinfoall')
+%% region
+species='marmoset';
+tracer='AAV';
+detecttype='cell';
+modality='mba';
+summary_initialize;
+for d=1:4
+    inj_tracer=injinfoall{d};
+    for i=1:length(inj_tracer)
+        if ~isempty(inj_tracer{i})
+            inj_com=inj_tracer{i}.com;
+            if ~isempty(inj_com)
+                injanno{d}(i,1)=inj_tracer{i}.id;
+                injanno{d}(i,2)=atlas(inj_com(1),inj_com(2),inj_com(3));
+            end
+        end
+    end
+end
+save('allinjinfo','injanno','-append')
 %% visualize
 tracers={'ante';'retro'};
 for t=1:2

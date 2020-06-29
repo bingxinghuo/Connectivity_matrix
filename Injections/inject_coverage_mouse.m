@@ -1,6 +1,6 @@
 annoimgfile='~//Dropbox (Mitra Lab)/Data and Analysis/Mouse/MouseBrainAtlases/AllenMouseBrainAtlas/Standardized/Annotation_for_Nissl/annotation_mapped_25_bregma.vtk';
-% [xA,yA,zA,atlas,title_,names,spacing] = read_vtk_image(annoimgfile);
-% atlas=permute(atlas,[2,1,3]);
+[xA,yA,zA,atlas,title_,names,spacing] = read_vtk_image(annoimgfile);
+atlas=permute(atlas,[2,1,3]);
 % mouse
 % origin=[35,228,320]; % inferior-left-anterior
 origin=[20,228,320]; % inferior-left-anterior. Adjusted bregma to take into in vivo & skull
@@ -8,7 +8,8 @@ voxsize=25;
 %%
 % clear InjectionplanrAAV
 % uiopen('/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Mouse/Joint_Analysis/Injection/Injectionplan_rAAV.xlsx',1)
-allinj=table2cell(InjectionplanrAAV);
+% allinj=table2cell(InjectionplanrAAV);
+allinj=table2cell(locationPMDAAV2);
 L=size(allinj,1);
 % Column 1 contains initial injection ID
 firstinj=zeros(L,1);
@@ -43,13 +44,22 @@ allinj1(:,2)=injcounts;
 % whether it has been injected
 allinj1(:,3:6)=cell2mat(allinj(:,3:6));
 %% convert injection coordinates into atlas coordinates
-injinfoall=cell(L,1);
+% allinjcoord=cell2mat(allinj(:,3:5)); % InjectionplanrAAV
+allinjcoord=cell2mat(allinj(:,4:6)); % locationPMDAAV2
+injinfoall=cell(L,2);
 for i=1:L
-    injinfoall{i}.id=strcat(allinj(i,1),allinj(i,2));
-    injcent(1)=origin(1)+allinj1(i,5)*1000/voxsize; % DV, ventral is positive
-    injcent(2)=origin(2)-allinj1(i,3)*1000/voxsize; % ML, left is positive
-    injcent(3)=origin(3)+allinj1(i,4)*1000/voxsize; % AP, anterior is positive
+%     injinfoall{i}.id=strcat(allinj(i,1),allinj(i,2));
+    injinfoall{i}.id=strcat(allinj(i,1));
+    injcent(1)=origin(1)+allinjcoord(i,3)*1000/voxsize; % DV, ventral is positive
+    injcent(2)=origin(2)-allinjcoord(i,1)*1000/voxsize; % ML, left is positive
+    injcent(3)=origin(3)+allinjcoord(i,2)*1000/voxsize; % AP, anterior is positive
     injinfoall{i}.com=round(injcent);
+        % adjust injection DV counting from dorsal surface
+    dvstart=find(squeeze(atlas(:,injinfoall{i}.com(2),injinfoall{i}.com(3))));
+    if ~isempty(dvstart)
+    injcent(1)=dvstart(1)+allinjcoord(i,3)*1000/voxsize; % DV, ventral is positive
+    injinfoall{i}.com=round(injcent);
+    injinfoall{i,2}=atlas(max(1,injinfoall{i}.com(1)),injinfoall{i}.com(2),injinfoall{i}.com(3));
 end
 %% save into separate volumes
 % tracers='rAAV';
@@ -86,3 +96,10 @@ for k=1:length(types)
         imwrite(uint16(centvol(:,:,i)),['inj_rAAV',num2str(types(k)),'_mouse.tif'],'writemode','append','compression','packbit')
     end
 end
+%%
+injanno=cell2mat(injinfoall(:,2));
+scid=childreninfo(mouselist,302,0);
+scid=[scid;childreninfo(mouselist,294,0)];
+scid=cell2mat(scid(:,4));
+injsc=ismember(injanno(:,1),scid);
+injsc=find(injsc,2);
