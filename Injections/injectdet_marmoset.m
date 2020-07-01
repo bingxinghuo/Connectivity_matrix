@@ -18,8 +18,7 @@ N=length(marmosetdatainfo);
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
-% for i=2:N % m819 was manually annotated. Start from 2.
-for i=N
+for i=2:N % m819 was manually annotated. Start from 2.
     %% 1. initialize
     brainID=marmosetdatainfo(i).animalid{1};
     rangeofinterest=''; % default to the entire range
@@ -29,41 +28,55 @@ for i=N
     injcolor=datainfo.signalcolor;  % default to all colors
     datainfo.flips=str2num(marmosetdatainfo(i).flips);
     cell_init_marmoset_brain;
-%     %% 2.  set background standard
-%     bgfile=[regdir,'/background_standard.mat'];
-%     if exist(bgfile,'file')
-%         load(bgfile); % load bgimgmed0 from contrastadj3.m
-%     else
-%         bgfile=[injmaskdir,'/background_standard.mat'];
-%         if exist(bgfile,'file')
-%             load(bgfile); % load bgimgmed0 from contrastadj3.m
-%         else
-%             % contrastadj3.m
-%             [~,bgimgmed0,~]=bgstandard(filelist,simgdir,tissuemaskdir,injmaskdir);
-%         end
-%     end
-%     %% 3. 
-%     cd(simgdir)
-%     datainfo.originresolution=marmosetdatainfo(i).originresolution*maskscale;
-%     for f=1:length(filelist)
-%         [~,filename,~]=fileparts(filelist{f});
-%         disp(['Processing ',filename,'...'])
-%         maskfile=[tissuemaskdir,filename,'.tif'];
-%         if ~exist(maskfile,'file')
-%             maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f)];
-%         end
-%         imgmask=imread(maskfile);
-%         injmaskfile=[injmaskdir,filename,'.tif'];
-%         injection_extent(filename,imgmask,bgimgmed0,injcolor,injmaskfile);
-%         disp([filelist{f},' done.'])
-%     end
-%     %     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
-%     neurondensity=neuronvoxelize(datainfo,tissuemaskdir,injmaskdir,savetmpdir,1,detecttype);
-% %     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
-injsumfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'];
-if exist(injsumfile,'file')
-    load(injsumfile)
-    save([outputdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'],'neurondensity','-append')
-end
-end
+    %% 2.  set background standard
+    bgfile=[regdir,'/background_standard.mat'];
+    if exist(bgfile,'file')
+        load(bgfile); % load bgimgmed0 from contrastadj3.m
+    else
+        bgfile=[injmaskdir,'/background_standard.mat'];
+        if exist(bgfile,'file')
+            load(bgfile); % load bgimgmed0 from contrastadj3.m
+        else
+            % contrastadj3.m
+            [~,bgimgmed0,~]=bgstandard(filelist,simgdir,tissuemaskdir,injmaskdir);
+        end
+    end
+    %% 3. 
+    cd(simgdir)
+    datainfo.originresolution=marmosetdatainfo(i).originresolution*maskscale;
+    for f=1:length(filelist)
+        [~,filename,~]=fileparts(filelist{f});
+        disp(['Processing ',filename,'...'])
+        maskfile=[tissuemaskdir,filename,'.tif'];
+        if ~exist(maskfile,'file')
+            maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f)];
+        end
+        imgmask=imread(maskfile);
+        injmaskfile=[injmaskdir,filename,'.tif'];
+        injection_extent(filename,imgmask,bgimgmed0,injcolor,injmaskfile);
+        disp([filelist{f},' done.'])
+    end
+    %     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
+    neurondensity=neuronvoxelize(datainfo,tissuemaskdir,injmaskdir,savetmpdir,1,detecttype);
+%     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
 % delete(poolobj)
+neurondensityvol=volume_reconstruct(brainID,neurondensity*(datainfo.voxelsize^2),annodir,proctif);
+    outputfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(outputvoxel),'.mat'];
+    save(outputfile,'neurondensityvol','-append')
+    disp('Stop here to proofread.')
+    return
+ %% proofread
+    % After proofreading, apply the proofread mask to original density
+    injsumfile=[outputdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'];
+    neurondensityproof=cell(length(neurondensityvol),1);
+    C=input('Please identify the channels that are proofread (1: R, 2: G, 3: B; e.g. "[1,2]"): ');
+    for ci=1:length(C)
+        proofreadfile=input(['Please identify the proofread mask file for channel ',num2str(C(ci)),': '],'s');
+        for k=1:size(neurondensityvol{1},3)
+            proofmask(:,:,k)=imread(proofreadfile,k);
+        end
+        densityM=neurondensityvol{C(ci)};
+        neurondensityproof{C(ci)}=densityM.*cast(proofmask>0,'like',densityM);
+    end
+    save(injsumfile,'neurondensityproof','-append')
+end
