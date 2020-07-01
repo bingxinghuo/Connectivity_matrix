@@ -41,7 +41,7 @@ for i=2:N % m819 was manually annotated. Start from 2.
             [~,bgimgmed0,~]=bgstandard(filelist,simgdir,tissuemaskdir,injmaskdir);
         end
     end
-    %% 3. 
+    %% 3.
     cd(simgdir)
     datainfo.originresolution=marmosetdatainfo(i).originresolution*maskscale;
     for f=1:length(filelist)
@@ -58,14 +58,15 @@ for i=2:N % m819 was manually annotated. Start from 2.
     end
     %     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
     neurondensity=neuronvoxelize(datainfo,tissuemaskdir,injmaskdir,savetmpdir,1,detecttype);
-%     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
-% delete(poolobj)
-neurondensityvol=volume_reconstruct(brainID,neurondensity*(datainfo.voxelsize^2),annodir,proctif);
-    outputfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(outputvoxel),'.mat'];
+    %     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
+    % delete(poolobj)
+    voltif=[savetmpdir,'/',brainID,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.tif'];
+    neurondensityvol=volume_reconstruct(brainID,neurondensity*(datainfo.voxelsize(1)^2),regdir,voltif);
+    outputfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'];
     save(outputfile,'neurondensityvol','-append')
     disp('Stop here to proofread.')
     return
- %% proofread
+    %% proofread
     % After proofreading, apply the proofread mask to original density
     injsumfile=[outputdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'];
     neurondensityproof=cell(length(neurondensityvol),1);
