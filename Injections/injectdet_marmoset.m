@@ -60,8 +60,9 @@ for i=2:N % m819 was manually annotated. Start from 2.
     neurondensity=neuronvoxelize(datainfo,tissuemaskdir,injmaskdir,savetmpdir,1,detecttype);
     %     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
     % delete(poolobj)
-    neurondensityvol=volume_reconstruct(brainID,neurondensity*(datainfo.voxelsize^2),annodir,proctif);
-    outputfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(outputvoxel),'.mat'];
+    voltif=[savetmpdir,'/',brainID,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.tif'];
+    neurondensityvol=volume_reconstruct(brainID,neurondensity*(datainfo.voxelsize(1)^2),regdir,voltif);
+    outputfile=[savetmpdir,'/',animalid,'_',detecttype,'_',num2str(datainfo.voxelsize(1)),'.mat'];
     save(outputfile,'neurondensityvol','-append')
     disp('Stop here to proofread.')
     return
