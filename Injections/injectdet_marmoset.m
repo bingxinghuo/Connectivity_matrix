@@ -30,7 +30,7 @@ for i=N
     datainfo.flips=str2num(marmosetdatainfo(i).flips);
     cell_init_marmoset_brain;
 %     %% 2.  set background standard
-%     bgfile=[regdir,'/background_standard.mat'];
+%     bgfile=[regimgdir,'/background_standard.mat'];
 %     if exist(bgfile,'file')
 %         load(bgfile); % load bgimgmed0 from contrastadj3.m
 %     else
