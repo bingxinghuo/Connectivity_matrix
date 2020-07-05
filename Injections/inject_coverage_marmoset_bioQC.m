@@ -1,4 +1,4 @@
-%%
+%% This script extracts marmoset injection information from the injection coordinates during experiment
 % annoimgfile='/Users/bingxinghuo/Dropbox (Mitra Lab)/Data and Analysis/Marmoset/MarmosetBrainAtlases/2015 RIKEN/Brian transformed atlas/annotation_80_flip.img';
 % annoimgs=analyze75read(annoimgfile);
 %%
