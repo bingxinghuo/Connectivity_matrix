@@ -1,5 +1,6 @@
 %% injectdet_marmoset.m
 % by Bingxing Huo, June 2020
+% updated Dec 2021
 % This script runs the injection detection pipeline for marmoset data,
 % where injection areas were detected based on downsampled fluorescent
 % image intensity.
@@ -18,7 +19,7 @@ N=length(marmosetdatainfo);
 % myCluster = parcluster('local'); % cores on compute node to be "local"
 % poolobj=parpool(myCluster, 10);
 % addpath(genpath('~/scripts/'))
-for i=2:N % m819 was manually annotated. Start from 2.
+for i=12:N % m819 was manually annotated. Start from 2.
     %% 1. initialize
     brainID=marmosetdatainfo(i).animalid{1};
     rangeofinterest=''; % default to the entire range
@@ -29,34 +30,40 @@ for i=2:N % m819 was manually annotated. Start from 2.
     datainfo.flips=str2num(marmosetdatainfo(i).flips);
     cell_init_marmoset_brain;
     %% 2.  set background standard
-%     bgfile=[regdir,'/background_standard.mat'];
-%     if exist(bgfile,'file')
-%         load(bgfile); % load bgimgmed0 from contrastadj3.m
-%     else
-%         bgfile=[injmaskdir,'/background_standard.mat'];
-%         if exist(bgfile,'file')
-%             load(bgfile); % load bgimgmed0 from contrastadj3.m
-%         else
-%             % contrastadj3.m
-%             [~,bgimgmed0,~]=bgstandard(filelist,simgdir,tissuemaskdir,injmaskdir);
-%         end
-%     end
-%     %% 3. injection detection and summarize
-%     cd(simgdir)
+    bgfile=[regdir,'/background_standard.mat'];
+    if exist(bgfile,'file')
+        load(bgfile); % load bgimgmed0 from contrastadj3.m
+    else
+        bgfile=[injmaskdir,'/background_standard.mat'];
+        if exist(bgfile,'file')
+            load(bgfile); % load bgimgmed0 from contrastadj3.m
+        else
+            % contrastadj3.m
+            [~,bgimgmed0,~]=bgstandard(filelist,simgdir,tissuemaskdir,M,injmaskdir);
+        end
+    end
+    %% 3. injection detection and summarize
+    cd(simgdir)
 %     datainfo.originresolution=marmosetdatainfo(i).originresolution*maskscale;
-%     for f=1:length(filelist)
-%         [~,filename,~]=fileparts(filelist{f});
-%         disp(['Processing ',filename,'...'])
-%         maskfile=[tissuemaskdir,filename,'.tif'];
-%         if ~exist(maskfile,'file')
-%             maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f)];
-%         end
-%         imgmask=imread(maskfile);
-%         injmaskfile=[injmaskdir,filename,'.tif'];
-%         injection_extent(filename,imgmask,bgimgmed0,injcolor,injmaskfile);
-%         disp([filelist{f},' done.'])
-%     end
-%     %     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
+myCluster = parcluster('local');
+poolobj=parpool(myCluster, 10);    
+parfor f=1:length(filelist)
+        [~,filename,~]=fileparts(filelist{f});
+        disp(['Processing ',filename,'...'])
+        maskfile=[tissuemaskdir,filename,'.tif'];
+        if ~exist(maskfile,'file')
+            maskfile=[tissuemaskdir,'imgmaskdata_',num2str(f),'.tif'];
+        end
+        imgmask=imread(maskfile);
+        imgmask1=imresize(imgmask,1/M);
+        imgmask1=imgmask1>0;
+        injmaskfile=[injmaskdir,filename,'.tif'];
+        injection_extent(filename,imgmask1,bgimgmed0,injcolor,injmaskfile);
+        disp([filelist{f},' done.'])
+end
+delete(poolobj)
+    %%
+    %     %     [injdir,~,~]=fileparts(injmaskdir); % remove "/" on the end
 %     neurondensity=neuronvoxelize(datainfo,tissuemaskdir,injmaskdir,savetmpdir,1,detecttype);
     %     regionneuronsummary(datainfo,detecttype,outputdir,neurondensity,annoimgfile,marmosetlistfile);
     % delete(poolobj)

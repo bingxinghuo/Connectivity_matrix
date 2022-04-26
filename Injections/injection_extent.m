@@ -22,12 +22,13 @@ elseif isa(fluimg,'uint8')
     
 end
 % signalmaskrgb=signaldet(fluimg,injcolor,imgmask,bgimgmed0,bitinfo);
+threshbase=100;
 fluimg1=bgadj(fluimg,imgmask,bgimgmed0); % adjust background
 if bitinfo==12
     fluimg1=fluimg1*(2^16/2^12); % scale to full 16-bit
-    threshmask=50*(2^4);
+    threshmask=threshbase*(2^4);
 elseif bitinfo==8
-    threshmask=50;
+    threshmask=threshbase;
 end
 hsvimg=rgb2hsv(cast(fluimg1,'like',fluimg));
 I1=hsvimg(:,:,3)>nanmean(nonzeros(hsvimg(:,:,3)))+nanstd(nonzeros(hsvimg(:,:,3)));
